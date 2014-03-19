@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <rss version="2.0"
+        xmlns:content="http://purl.org/rss/1.0/modules/content/"
+        xmlns:atom="http://www.w3.org/2005/Atom"
+  >
+  <channel>
+    <title>鞠达</title>
+    <link href="http://juda-hku.github.io/feed/" rel="self" />
+    <link href="http://juda-hku.github.io" />
+    <lastBuildDate>2014-03-19T18:03:40+08:00</lastBuildDate>
+    <webMaster>judanju@gmail.com</webMaster>
+    
+    <item>
+      <title>浅谈Gitosis实现原理</title>
+      <link href="http://juda-hku.github.io/2012/10/gitosis/"/>
+      <pubDate>2012-10-09T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/10/gitosis</guid>
+      <content:encoded><![CDATA[<p>git作为一个分布式的版本控制系统,其实client端和server的差别并不是很大，只是server端往往没有工作拷贝的需求，所以往往是一个裸库（bare repository），往往文件夹的名称为xxxx.git ，裸库的内容其实就相当于客户端某个工程下的.git目录了.     <br/>
+<br>
+使用git的时候，一般和服务器通讯使用的是ssh协议，用ssh的主要优点是速度快（传输前数据会先压缩，比HTTP快），安全，方便读写。
+客户端通过ssh访问服务器端的验证方式一般有两种，一种是用户名密码的方式，一种是使用公私钥认证的方式.
+使用公私钥的方式比较方便，无需每次登录输入密码。
+某个受信任的客户端的公钥会被设置在服务器端的 ~/.ssh/authorized_keys文件中，有关此文件的格式可以参见 sshd的用户手册  <code>man sshd</code> . authorized_keys有个比较厉害的功能是 支持 command参数，使得每次用户使用此公钥进行验证的时候执行此后面的命令.这样就可以做一些逻辑处理了.   <br/>
+<br>
+一般git库的管理需要权限控制，如何方便简单的进行库的权限管理呢？ authorized_keys是一个思路，指定特定command参数，每次验证好用户后首先执行相关逻辑，检测当前用户是否具有某个权限。
+所以便有了gitosis，与其说gitosis是一个git权限管理系统，还不如说它是一个authorized_keys文件管理器.   <br/>
+gitosis的设计思路很巧妙，开天辟地之初，需要一个gitosis的管理员，所以你就在你的客户端机器上生成一对公私钥，将公钥拷贝到git服务器端的/tmp/下，然后通过gitosis在git用户home目录下运行如下初始化命令，后面的公钥便是gitosis首个管理员的公钥</p>
+
+<div class="highlight"><pre><code class="bash">sudo -H -u git gitosis-init &lt; /tmp/id_rsa.pub
+</code></pre></div>
+
+
+<p>执行之后，home目录下出现一个repositories的目录，目录下存在一个gitosis-admin.git的git库. 其实gitosis就是通过这个git库来管理所有git库的访问权限的。  <br/>
+在刚才你的客户端机器上clone出这个库，因为你刚刚用你的公钥初始化了gitosis，所以你有权限访问服务器端的库（其实你可以在服务器端看看authorized_keys文件便知道原因了）。
+这个gitosis-admin的库中存在一个gitosis.conf和一个keydir的目录，gitosis.conf文件就是权限配置的地方，keydir目录下存放的是所有客户端的公钥，公钥名字必须和配置文件中的member名字对应.至于gitosis.conf的语法及用法可以去查看帮助。 <br/>
+当修改完配置和添加好需要添加的公钥之后，提交并push到git服务器，这个库的存在hook，当提交后，会根据新的配置和公钥去更新服务器端git用户的authorized_keys，以便加入新用户的公钥，用于权限控制命令，以及在裸库的目录下提取出新的gitosis.conf文件。<br/>
+<br>
+所以 gitosis的核心在于authorized_keys的command参数和git的hook功能.</p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Interface Orientations</title>
+      <link href="http://juda-hku.github.io/2012/08/interface-orientations/"/>
+      <pubDate>2012-08-19T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/08/interface-orientations</guid>
+      <content:encoded><![CDATA[<h3>一.UISupportedInterfaceOrientations</h3>
+
+<p>这个UIKit的设定可以通过XCode工具来设定.
+<br>   <br/>
+<img src="http://farm9.staticflickr.com/8432/7813371994_00279e8940.jpg" alt="" />
+<br></p>
+
+<p>或者直接编辑info plist    <br/>
+<br>
+<img src="http://farm9.staticflickr.com/8307/7813372098_aca4f81c62_z.jpg" alt="" />
+ <br></p>
+
+<p>对应的是一个数组,可以有以下几种类型
+UIInterfaceOrientationPortrait   <br/>
+UIInterfaceOrientationPortraitUpsideDown   <br/>
+UIInterfaceOrientationLandscapeLeft   <br/>
+UIInterfaceOrientationLandscapeRight  <br/>
+那UISupportedInterfaceOrientations的作用是什么呢？   <br/>
+系统会根据UISupportedInterfaceOrientations支持的取向结合设备的当前取向来决定程序启动时的初始取向.</p>
+
+<h3>二.UIViewController's Interface Orientation</h3>
+
+<p>当设备的取向发生变化的时候，系统会发送UIDeviceOrientationDidChangeNotification通知，一般情况下我们自己不必亲自处理此通知，因为UIKit框架已经获取通知并做处理了。
+有一点需要注意的是，不管什么取向，UIWindow的frame始终是不会变化的，可以认为其始终是Portrait的取向。还有就是当app启动的时候，UIViewController 都会从Portrait取向转到当前的取向。</p>
+
+<h4>1.声明UIViewController所支持的取向</h4>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">shouldAutorotateToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">orientation</span>
+<span class="p">{</span>
+   <span class="k">if</span> <span class="p">((</span><span class="n">orientation</span> <span class="o">==</span> <span class="n">UIInterfaceOrientationPortrait</span><span class="p">)</span> <span class="o">||</span>
+       <span class="p">(</span><span class="n">orientation</span> <span class="o">==</span> <span class="n">UIInterfaceOrientationLandscapeLeft</span><span class="p">))</span>
+      <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+ 
+   <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>返回YES，则说明当前UIViewController支持此orientation，返回NO则不支持此orientation</p>
+
+<h4>2.One-part Rotation</h4>
+
+<p>UIViewController 有几个方法可以让子类来覆盖</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willRotateToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>这个方法在旋转开始之前被调用.</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willAnimateRotationToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">interfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>此方法是在旋转的动画的block中被调用的，也就是说，如果你需要在旋转的过程中添加额外的动画，则将代码添加于此处(当然得是animatable的属性的设置代码)。当此方法被调用的时候，UIViewController的view的bounds已是旋转之后的值了。当然还有一种方式是将旋转分成两步，只是这两个方法已是__OSX_AVAILABLE_BUT_DEPRECATED了，故不常用它便是，且其比一步的复杂些。</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didRotateFromInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">fromInterfaceOrientation</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>当旋转结束后，此方法会被调用。</p>
+
+<h3>三.UIViewController旋转的本质</h3>
+
+<p>为了探究在UIViewController旋转的过程中到底发生了什么，可以新建一个Single View的项目用来测试。
+ViewController设置为UIWindow的rootViewController.当旋转的时候rootViewController旋转相关的方法会被调用，且rootViewController的view会发生旋转。
+假设程序启动时，app的取向是Portrait，即如下图所示    <br/>
+<br>
+<img src="http://farm8.staticflickr.com/7116/7813372192_a9c89753d9.jpg" alt="" />
+<br>   <br/>
+当旋转，运行到willAnimateRotationToInterfaceOrientation之时，其view的bounds已是新的，只是其frame此时为(0 0; 300 480)，不过view本身的transform为旋转90度的变换(transform = [0, 1, -1, 0, 0, 0]),且view有animates相附，</p>
+
+<div class="highlight"><pre><code class="objc"><span class="n">animations</span> <span class="o">=</span> <span class="p">{</span> <span class="n">transform</span><span class="o">=&lt;</span><span class="n">CABasicAnimation</span><span class="o">:</span> <span class="mh">0x6a79840</span><span class="o">&gt;</span><span class="p">;</span> <span class="n">position</span><span class="o">=&lt;</span><span class="n">CABasicAnimation</span><span class="o">:</span> 
+<span class="mh">0x6a91fa0</span><span class="o">&gt;</span><span class="p">;</span> <span class="n">bounds</span><span class="o">=&lt;</span><span class="n">CABasicAnimation</span><span class="o">:</span> <span class="mh">0x6a920e0</span><span class="o">&gt;</span><span class="p">;</span> <span class="p">};</span>
+</code></pre></div>
+
+
+<p>可知其位置和bounds都有相关动画。
+<br>   <br/>
+<img src="http://farm9.staticflickr.com/8307/7813372286_56fbc2452d.jpg" alt="" />
+<br></p>
+
+<p>旋转结束之后为如下样子
+view的frame是(0 0; 300 480),只是进行了transform，且依据AutoresingMask进行了调整
+<br>   <br/>
+<img src="http://farm9.staticflickr.com/8429/7813372386_05eba9d8a4.jpg" alt="" />
+<br>   <br/>
+只有知道旋转的本质之后，很多事情理解起来就深刻多了。</p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>iOS的三维透视投影</title>
+      <link href="http://juda-hku.github.io/2012/07/ios-3d-perspective/"/>
+      <pubDate>2012-07-08T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/07/ios-3d-perspective</guid>
+      <content:encoded><![CDATA[<h4>一.概述</h4>
+
+<p>在iOS中使用CATransform3D这个结构体来表示三维的齐次坐标变换矩阵.
+齐次坐标是一种坐标的表示方法，n维空间的坐标需要用n+1个元素的坐标元组来表示,在<a href="https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq_affine/dq_affine.html#//apple_ref/doc/uid/TP30001066-CH204-CJBECIAD">Quartz 2D Transform</a>中就有关于齐次坐标的应用,那边是关于二维空间的变换，其某点的齐次坐标的最后一个元素始终设置为1。使用齐次坐标而不是简单的数学坐标是为了方便图形进行仿射变换，仿射变换可以通过仿射变换矩阵来实现，3D的仿射变换可以实现诸如 平移(translation)，旋转(rotation),缩放(scaling),切变(shear)等变换。如果不用齐次坐标那么进行坐标变换可能就涉及到两种运算了，加法（平移）和乘法（旋转，缩放），而使用齐次坐标以及齐次坐标变换矩阵后只需要矩阵乘法就可以完成一切了。上面的这些如果需要深入了解就需要去学习一下图形变换的相关知识，自己对矩阵的乘法进行演算。</p>
+
+<p>iOS中的CALayer的3D本质上并不能算真正的3D(其视点即观察点或者所谓的照相机的位置是无法变换的),而只是3D在二维平面上的投影，投影平面就是手机屏幕也就是xy轴组成的平面(注意iOS中为左手坐标系)，那么视点的位置是如何确定的呢？可以通过CATransform3D中的m34来间接指定， m34 = -1/z,其中z为观察点在z轴上的值,而Layer的z轴的位置则是通过anchorPoint来指定的，所谓的anchorPoint(锚点)就是在变换中保持不变的点，也就是某个Layer在变换中的原点,xyz三轴相交于此点。在iOS中，Layer的anchorPoint使用unit coordinate space来描述，unit coordinate space无需指定具体真实的坐标点而是使用layer bounds中的相对位置，下图展示了一个Layer中的几个特殊的锚点,  <br/>
+<img src="http://farm9.staticflickr.com/8164/7525485756_6782ed8ce6.jpg" alt="" /></p>
+
+<p> m34 = -1/z中，当z为正的时候，是我们人眼观察现实世界的效果，即在投影平面上表现出近大远小的效果，z越靠近原点则这种效果越明显，越远离原点则越来越不明显，当z为正无穷大的时候，则失去了近大远小的效果，此时投影线垂直于投影平面，也就是视点在无穷远处，CATransform3D中m34的默认值为0，即视点在无穷远处.</p>
+
+<p> 还有一个需要说明一下的就是齐次坐标到数学坐标的转换
+ 通用的齐次坐标为 (a, b, c, h),其转换成数学坐标则为 (a/h, b/h, c/h).</p>
+
+<h4>二.代数解释</h4>
+
+<p>假设一个Layer anchorPoint为默认的 (0.5, 0.5 ), 其三维空间中一个A点 (6, 0, 0)，m34 = -1/1000.0, 则此点往z轴负方向移动10个单位之后，则在投影平面上看到的点的坐标是多少呢？</p>
+
+<p>A点使用齐次坐标表示为 (6, 0, 0, 1)</p>
+
+<p>QuartzCore框架为我们提供了函数来算出所需要的矩阵，</p>
+
+<div class="highlight"><pre><code class="objc">    <span class="n">CATransform3D</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">CATransform3DIdentity</span><span class="p">;</span>
+    <span class="n">transform</span><span class="p">.</span><span class="n">m34</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">;</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="n">CATransform3DTranslate</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+</code></pre></div>
+
+
+<p>计算出来的矩阵为</p>
+
+<div class="highlight"><pre><code class="objc"> 
+<span class="p">{</span> <span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span><span class="p">;</span>   
+  <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span><span class="p">;</span>   
+  <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>     <span class="o">-</span><span class="mf">0.001</span><span class="p">;</span>   
+  <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>  <span class="o">-</span><span class="mi">10</span><span class="p">,</span>    <span class="mf">1.01</span><span class="p">;</span>      
+<span class="p">}</span>   
+</code></pre></div>
+
+
+<p>其实上面的变换矩阵本质上是两个矩阵相乘得到的 变换矩阵 * 投影矩阵
+变换矩阵为</p>
+
+<div class="highlight"><pre><code class="objc"><span class="p">{</span><span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">;</span>   
+ <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">;</span>   
+ <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">;</span>   
+ <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>   <span class="o">-</span><span class="mi">10</span><span class="p">,</span>  <span class="mi">1</span><span class="p">;</span>      
+<span class="p">}</span>     
+</code></pre></div>
+
+
+<p>投影矩阵为</p>
+
+<div class="highlight"><pre><code class="objc"> 
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">;</span>   
+ <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">;</span>   
+ <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.001</span><span class="p">;</span>   
+ <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">;</span>   
+<span class="p">}</span>     
+</code></pre></div>
+
+
+<p>上面的两个矩阵相乘则会得到最终的变换矩阵(如果忘记矩阵乘法的可以去看下线性代数复习下)，所以一个矩阵就可以完成变换和投影。</p>
+
+<p>将A点坐标乘上最终的变换矩阵，则得到
+{6, 0 , -10, 1.01}, 转换成数学坐标点为 {6/1.01, 0, 10/1.01},则可以知道其在投影平面上的投影点为
+{6/1.01, 0, 0} 也就是我们看到的变换后的点。其比之前较靠近原点。越往z轴负方向移动，则在投影平面上越靠近原点。</p>
+
+<h4>三.几何解释</h4>
+
+<p>将上面的例子使用几何的方式来进行解释分析，当我们沿着y轴的正方向向下看时候，可以得到如下的景象</p>
+
+<p><img src="http://farm8.staticflickr.com/7134/7525866072_efebf5cd22.jpg" alt="" /></p>
+
+<p> 虚线为投影线，其和x轴的交点即为A点的投影点。
+ 由相似三角形的定理我们很容易算出投影的点，</p>
+
+<p>  1000/(1000 + 10) = x/6,则x = 6*1000/1010 = 6/1.01</p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Mac，iOS界面中的三维坐标系</title>
+      <link href="http://juda-hku.github.io/2012/06/3d-coordinate-system/"/>
+      <pubDate>2012-06-22T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/06/3d-coordinate-system</guid>
+      <content:encoded><![CDATA[<h3>一. 三维坐标系</h3>
+
+<p>据说有一次笛卡尔生病了，躺在床上休息，但是他的大脑却没有休息，一只在寻思着通过什么手段把几何图形和代数方程关联起来，也就是几何图形中的每一个点怎么和方程的每一组解关联起来。这个时候他看到房顶上有一只蜘蛛在织网，蜘蛛空中爬来爬去。他想地上墙角的三面墙相交出三条线，把墙角作为原点，把这三条线作为数轴，那么蜘蛛某刻的位置可以通过这三条数轴上的数来表示，反过来，给定一组数便可以确定空间中的一点。后来笛卡尔发明了平面直角坐标系,当然上面的故事是三维空间的，只是为了说明，坐标系的作用是为了便于描述点的位置。（我们学过的除了平面直角坐标系这个二维坐标系外，还学过极坐标系，通过到原点的距离以及夹角角度来表示一个点。）</p>
+
+<p>后人在笛卡尔的平面坐标系的基础上发明了三维坐标系，常用的三维坐标系分两种：左手坐标系和右手坐标系。当确定了x轴，y轴方向之后可以通过左手或右手来确定z轴的方向。下图则是左手坐标系和右手坐标系的规则示意图: <br/>
+<img src="http://farm8.staticflickr.com/7117/7419361874_f5d16fb101.jpg" alt="" /></p>
+
+<p>弯曲 拇指，食指和中指使它们两两相互垂直，拇指指向x轴正方向，食指指向y轴正方向，中指指向z轴正方向 。左手坐标系使用左手，右手坐标系使用右手。（上面示意图中的左手坐标系或者右手坐标系整体旋转后性质不变，比如左手坐标系旋转后，使得y轴正方向向下，x轴正方向保持向右，它依然是左手坐标系。）</p>
+
+<p>另外还有一个左手或者右手定则来判断旋转的正方向，握住拳头，拇指指向旋转轴的正方向，四指弯曲的方向为旋转的正方向。左手坐标系使用左手来判定，右手坐标系使用右手来判定.   下图是右手的例子: <br/>
+<img src="http://farm6.staticflickr.com/5324/7419361824_7de70fa1af.jpg" alt="" /></p>
+
+<p><br></p>
+
+<h3>二. Mac，iOS界面中的坐标系</h3>
+
+<p>话说Mac,iOS中的各种坐标系总会让初学者摸不着头脑，一会儿这样一会儿那样。不过有一点是不变的，z轴的正方向总是指向观察者，也就是垂直屏幕平面向上。</p>
+
+<h4>1.NSView坐标系</h4>
+
+<p>在Mac中NSView的坐标系默认是右手坐标系（View其实是二维坐标系，但是为了方便我们可以假设其是三维坐标系，只是所有界面的变化都是在xy平面上），原点在左下角. NSView提供了一个可以用于覆盖的方法</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isFlipped</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>此默认返回NO，当返回YES的时候，则坐标系变成左手坐标系，坐标原点变成左上角。 <br/>
+<img src="http://farm6.staticflickr.com/5328/7419981432_f6c7732dfe.jpg" alt="" /></p>
+
+<p>在Mac的AppKit中有很多界面组件本身就使用了Flipped Coordinate System(覆盖了上面的方法并返回YES)，如NSButton，NSTableview，NSSplitView 更详细的看这里  其中Cocoa Use of Flipped Coordinates
+ 这一节  <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/CocoaDrawingGuide/Transforms/Transforms.html">https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/CocoaDrawingGuide/Transforms/Transforms.html</a></p>
+
+<p> <br></p>
+
+<h4>2.UIView坐标系</h4>
+
+<p> 而在iOS的UIView中，则没有所谓的Flipped Coordinate的概念，统一使用左手坐标系，也就是坐标原点在左上角. <br/>
+ <img src="http://farm6.staticflickr.com/5192/7420067916_889152557b.jpg" alt="" /></p>
+
+<p><br></p>
+
+<h4>3.Quartz坐标系</h4>
+
+<p>Quartz（Core Graphics）坐标系使用的右手坐标系,原点在左下角,所以所有使用Core Graphics画图的坐标系都是右手坐标系，当使用CG的相关函数画图到UIView上的时候，需要注意CTM的Flip变换，要不然会出现界面上图形倒过来的现象。由于UIKit的提供的高层方法会自动处理CTM（比如UIImage的drawInRect方法），所以无需自己在CG的上下文中做处理。
+参见<a href="https://developer.apple.com/library/mac/#documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq_overview/dq_overview.html#//apple_ref/doc/uid/TP30001066-CH202-CJBBAEEC">Quartz 2D Coordinate Systems</a></p>
+
+<h4>4.CALayer坐标系</h4>
+
+<p>这个有些变态了，其坐标系和平台有关，在Mac中CALayer使用的是右手坐标系，其原点在左下角；iOS中使用的左手坐标系，其原点在左上角。
+参见 <a href="http://developer.apple.com/library/ios/#DOCUMENTATION/Cocoa/Conceptual/CoreAnimation_guide/Articles/Layers.html#//apple_ref/doc/uid/TP40006082-SW1">Layer Coordinate System</a></p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>关于iOS App的切图</title>
+      <link href="http://juda-hku.github.io/2012/06/image-slicing-for-ios-app/"/>
+      <pubDate>2012-06-07T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/06/image-slicing-for-ios-app</guid>
+      <content:encoded><![CDATA[<p>图形用户界面中的图形有两种实现方式，一种是用代码画出来，比如Quartz 2D技术，狠一点有OpenGL ES，另一种则是使用图片。 <br/>
+代码画的方式比较耗费程序员脑力,CPU或GPU; 图片则耗费磁盘空间,会增加app的体积.一般的app我们会偏重于使用图片来构建用户界面. <br/>
+设计师一般会使用PS来设计界面，所以在直接使用之前，有一个PSD到png的切图(Image Slicing)过程.下面是切图过程中可能要注意的几点. <br/>
+ <br></p>
+
+<h3>一.可重复元素</h3>
+
+<p>在用户界面的图形元素中，重复随处可见 ,所以我们利用好框架提供的接口, 以比较高的性价比创建用户界面。</p>
+
+<h4>1.Color Pattern</h4>
+
+<p>Color Pattern在Web设计中也经常会遇到比如网页的背景,甚至网络中可以找到专门收集各类可重复的纹理图案的站点,比如 <a href="http://subtlepatterns.com">http://subtlepatterns.com</a>.
+下面这是一个小图片模板 <br/>
+<br>
+<img src="http://farm8.staticflickr.com/7238/7160467573_a21e1c947b_t.jpg" alt="circles" />
+<br></p>
+
+<div class="highlight"><pre><code class="objc"><span class="n">UIColor</span> <span class="o">*</span><span class="n">circleColorPattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">colorWithPatternImage</span><span class="o">:</span>
+<span class="p">[</span><span class="n">UIImage</span> <span class="n">imageNamed</span><span class="o">:</span><span class="s">@&quot;circle_pattern.png&quot;</span><span class="p">]];</span>
+</code></pre></div>
+
+
+<p>这样便可以得到一个颜色模板,用这个颜色画或者填充某个区域的时候，模板图片会在指定的区域中进行平铺.比如把一个View的背景颜色设置成上面这个颜色，便会得到如下结果
+<br>
+<img src="http://farm8.staticflickr.com/7085/7160467655_e2806877c7.jpg" alt="circles_fill" />
+<br></p>
+
+<h4>2.resizableImage</h4>
+
+<p>除了整体平铺之外，很多时候我们希望某个图片的局部进行平铺，而其余部分则保持不变.
+比如常见的按钮，聊天的气泡背景或者图片的阴影边框.
+这里举个按钮的例子,一般情况下为了方便做按钮就直接切个按钮背景,如下图
+<img src="http://farm8.staticflickr.com/7219/7345749786_18422b630d_m.jpg" alt="button-blue" />
+但是自己看，你会发现按钮中间大都数像素都是横向重复的，所以可以使用iOS的图片接口来使用体积更小的图片实现相同的效果.
+首先使用PS的切图工具进行切图,下图中的切图逻辑是，左边切14像素(13像素加1像素，1像素为中间重复部分),右边切13像素.</p>
+
+<blockquote><p>Retina屏幕下一个单位对应着两个像素，这里的例子是非Retina下的情况，请注意</p></blockquote>
+
+<p><br>
+<img src="http://farm8.staticflickr.com/7071/7160590813_382d13dcec_z.jpg" alt="button-blue-slicing" />
+<br>
+<br></p>
+
+<p>切图后将左右合并，变成最终所需要的图片
+<br>
+<img src="http://farm8.staticflickr.com/7227/7160590679_c3ffb29b6e_z.jpg" alt="button-blue-sliced" />
+<br>
+图片宽度为27像素宽，中间第14个像素为中间重复的部分.</p>
+
+<div class="highlight"><pre><code class="objc"><span class="n">UIImage</span> <span class="o">*</span><span class="n">buttonBackgroundImage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIImage</span> <span class="n">imageNamed</span><span class="o">:</span><span class="s">@&quot;button_bkg.png&quot;</span><span class="p">]</span> 
+<span class="nl">resizableImageWithCapInsets:</span><span class="n">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">13</span><span class="p">)];</span>
+<span class="p">[</span><span class="n">button</span> <span class="n">setBackgroundImage</span><span class="o">:</span><span class="n">buttonBackgroundImage</span> 
+<span class="nl">forState:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+</code></pre></div>
+
+
+<p>resizableImageWithCapInsets:的参数是一个UIEdgeInsets的结构体类型,被capInsets覆盖到的区域将会保持不变，而未覆盖到的部分将会被用来平铺.</p>
+
+<p> 在iOS 5.0之前并没有这个方法，而是使用的另一个方法</p>
+
+<div class="highlight"><pre><code class="objc"> <span class="o">-</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">stretchableImageWithLeftCapWidth</span><span class="o">:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="n">leftCapWidth</span> 
+<span class="nl">topCapHeight:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="n">topCapHeight</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>这个方法有局限性，它只能指定leftCapWidth和topCapHeight，然后只有一个像素能够重复，也就是rightCapWidth为 imageWidth-leftCapWidth-1,而bottomCapHeight为 imageHeight - topCapHeight -1,所以重复的始终是中间的那一个像素.</p>
+
+<p><br>
+<br></p>
+
+<h3>二.图片边缘锯齿和抗锯齿问题</h3>
+
+<p><br></p>
+
+<h4>1.需要抗锯齿</h4>
+
+<p>有时候需要在旋转的动画中使用到图片，比如按钮的旋转，图片的旋转，为了避免在旋转的过程中出现边缘锯齿，我们需要在切图的时候，在边缘上多留至少一像素的透明像素，因为iOS在处理图片的时候对于外边缘是不做抗锯齿处理的，但是对于图片内部的边缘则会做抗锯齿处理.</p>
+
+<h4>2.需要去除抗锯齿效果</h4>
+
+<p>当某个imageView的frame的origin.x或者origin.y 不为整数的时候，会出现你不想要的抗锯齿效果，这个时候本来清晰的图片边缘会变得模糊，而这不是你想要的，所以这个时候我们就要对frame的起点进行取整。</p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Life Before ARC</title>
+      <link href="http://juda-hku.github.io/2012/05/life-before-arc/"/>
+      <pubDate>2012-05-18T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/05/life-before-arc</guid>
+      <content:encoded><![CDATA[<p>最近在看一本书, 书名是 "Pro Multithreading and Memory Management for iOS and OS X",主要讲内存管理及多线程相关内容的. <br/>
+<img src="http://farm6.staticflickr.com/5240/7221562548_c08c9b581f_n.jpg" alt="Pro.Multithreading.and.Memory.Management.for.iOS.and.OS.X" /></p>
+
+<p>第一章讲的便是手动管理内存的相关知识.
+<br></p>
+
+<h3>一.概述</h3>
+
+<p>Objc和其他许多高级语言一样在对象的内存管理方便都使用了引用计数的方案.</p>
+
+<ul>
+<li>如果你创建了一个对象,你便拥有这个对象,此时对象的引用计数为1,</li>
+<li>当你想拥有一个不是你创建的对象的时候，可以对其使用retain方法,引用计数加1</li>
+<li>当你用完了一个对象无需再时候的时候，你需要对其使用release方法释放所有权,这时引用计数减1</li>
+<li>当一个对象的引用计数为0的时候,其dealloc方法将被调用将其销毁</li>
+<li>当一个对象被销毁后,你还通过其先前的引用进行操作,那就可能引发crash或者不可预料的异常,这是非常危险的.</li>
+</ul>
+
+
+<p>用来创建对象的方法的名称都是有一定的规律的,方法为以下或者以以下各种方法名打头的方法(但必须遵守驼峰命名规则,比如newer便不可以用作创建对象的方法名)都是用来创建对象的,在我们自己定义的用来创建对象的方法也需要遵守此规则</p>
+
+<ul>
+<li>alloc 分配内存</li>
+<li>new  NSObject中[NSObject new]等同于 [[NSObject alloc] init]</li>
+<li>copy 复制出一个新对象</li>
+<li>mutableCopy 复制出一个可变(如数组可增删对象)的新对象</li>
+</ul>
+
+
+<p><br></p>
+
+<p>如果一个函数返回一个新创建的对象 比如 [NSArray array] 这样的,调用者对返回的对象并没有拥有权,但是在返回的时候新建的对象又不能在返回前释放,那该如何实现呢?
+下面是一个解决此类问题的例子</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">object</span><span class="p">{</span>
+    <span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span><span class="c1">//创建对象</span>
+    <span class="p">[</span><span class="n">obj</span> <span class="n">autorelease</span><span class="p">];</span><span class="c1">//释放对象的所有权,这个时候对象并不会立即销毁,因为此时对象的所有者为当前活动的autoreleasePool</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span><span class="c1">//返回对象</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>当某个对象调用autorelease方法后,其会被加入autoreleasePool,当autoreleasePool清空的时候，这个对象会被释放并销毁.</p>
+
+<p><br></p>
+
+<h3>二.引用计数的实现原理</h3>
+
+<p><br></p>
+
+<p>alloc方法的调用堆栈如下</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">+</span><span class="nf">alloc</span>
+<span class="k">+</span><span class="nf">allocWithZone:</span>
+<span class="n">class_createInstance</span>
+<span class="n">calloc</span>
+</code></pre></div>
+
+
+<p>class_createInstance方法的源码可以在苹果开源的runtime中找到 <a href="http://opensource.apple.com/source/objc4/objc4-493.11/runtime/objc-runtime-new.mm">http://opensource.apple.com/source/objc4/objc4-493.11/runtime/objc-runtime-new.mm</a>,
+class_createInstance根据不同的情况调用calloc或者malloc去分配内存块.</p>
+
+<p>那retainCount,retain,release是如何实现的呢?
+以下为各个方法的调用栈</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span><span class="nf">retainCount</span> 
+<span class="n">__CFDoExternRefOperation</span>
+<span class="n">CFBasicHashGetCountOfKey</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span><span class="nf">retain</span> 
+<span class="n">__CFDoExternRefOperation</span> 
+<span class="n">CFBasicHashAddValue</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span><span class="nf">release</span> 
+<span class="n">__CFDoExternRefOperation</span> 
+<span class="n">CFBasicHashRemoveValue</span>
+</code></pre></div>
+
+
+<p>我们可以发现retainCount,retain,release使用到了同一个CF函数<code>__CFDoExternRefOperation</code>,此函数是开源的，代码在下面的文件中
+<a href="http://www.opensource.apple.com/source/CF/CF-635.21/CFRuntime.c">http://www.opensource.apple.com/source/CF/CF-635.21/CFRuntime.c</a>.
+对象的引用计数的信息保存在一个哈希表中.</p>
+
+<p><br></p>
+
+<h3>三.自动释放池(NSAutoreleasePool)的实现原理</h3>
+
+<p>我们先看一个简单的例子</p>
+
+<div class="highlight"><pre><code class="objc"><span class="n">NSAutoreleasePool</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSAutoreleasePool</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span> 
+<span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+<span class="p">[</span><span class="n">obj</span> <span class="n">autorelease</span><span class="p">];</span>
+<span class="p">[</span><span class="n">pool</span> <span class="n">drain</span><span class="p">];</span><span class="c1">//等同于[pool release],autorelease pool是不能被retain的</span>
+</code></pre></div>
+
+
+<p><img src="http://farm6.staticflickr.com/5332/7225706146_bec59b116a.jpg" alt="Autorelase Pool" /></p>
+
+<p>当对objc调用autorelease方法时候，便释放其所有权,此时当前活动的autorelease pool拥有此对象,当当前活动autorelease pool被销毁时,autorelease pool所拥有的所有对象会收到release消息.
+AutoreleasePool不能调用autorelease方法，否则会报错. <br/>
+<br>
+很多时候我们发现并不需要自己去创建Autorelease Pool,这是为什么呢？
+因为在主线程中每一次RunLoop开始的时候会自动创建一个Autorelease Pool,结束的时候销毁这个Autorelease Pool
+<img src="http://farm8.staticflickr.com/7233/7225706212_8c66a0cb80.jpg" alt="Runloop Autorelease Pool" />
+AutoreleasePool是可以嵌套的,你可以想象成每创建一个NSAutoreleasePool对象的时候都将其push到一个栈中，栈顶的为当前活动的Autorelease Pool,当Autorelease Pool释放的时候会从这个栈中pop掉。</p>
+
+<p>有时候我们为了程序的性能考虑，需要自己在适当的地方加上autorelease pool,以便及时释放掉内存.比如下面这种情况</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numberOfImages</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSAutoreleasePool</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSAutoreleasePool</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="c1">//Loading images, etc.</span>
+    <span class="c1">//Too many autoreleased objects exist. </span>
+    <span class="p">[</span><span class="n">pool</span> <span class="n">drain</span><span class="p">];</span>
+    <span class="c1">//All the autoreleased objects are released by [pool drain]. </span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>如果不及时释放内存，则多次循环后图片和相关资源占用着内存，瞬间使得内存占用飙升。</p>
+
+<p>和autorelease相关的源码在此文件中 <a href="http://opensource.apple.com/source/objc4/objc4-493.11/runtime/objc-arr.mm">http://opensource.apple.com/source/objc4/objc4-493.11/runtime/objc-arr.mm</a>
+AutoreleasePool的实现为AutoreleasePoolPage类，是用C++来实现的。
+其中有一个重要的方法需要说明一下的,</p>
+
+<ul>
+<li>objc_autoreleasePoolPush 创建一个AutoreleasePool并push到堆栈中</li>
+<li>objc_autorelease 将对象放到当前活动的AutoreleasePool中</li>
+<li>objc_autoreleasePoolPop 将当前活动的AutoreleasePool从堆栈中pop出去(即被销毁)</li>
+</ul>
+
+
+<div class="highlight"><pre><code class="objc"><span class="n">NSAutoreleasePool</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSAutoreleasePool</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span> <span class="c1">//等价于objc_autoreleasePoolPush() </span>
+<span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+<span class="p">[</span><span class="n">obj</span> <span class="n">autorelease</span><span class="p">];</span><span class="c1">//等价于 objc_autorelease(obj) </span>
+<span class="p">[</span><span class="n">pool</span> <span class="n">drain</span><span class="p">];</span><span class="c1">// 等价于 objc_autoreleasePoolPop(pool) </span>
+</code></pre></div>
+
+
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Container View Controller</title>
+      <link href="http://juda-hku.github.io/2012/05/custom-container-view-controller/"/>
+      <pubDate>2012-05-16T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/05/custom-container-view-controller</guid>
+      <content:encoded><![CDATA[<p><br></p>
+
+<h3>一.UIViewController</h3>
+
+<p>做iOS开发的经常会和UIViewController打交道,从类名可知UIViewController属于MVC模型中的C(Controller),说的更具体点它是一个视图控制器,管理着一个视图(view)。</p>
+
+<p>UIViewController的view是lazy loading的,当你访问其view属性的时候,view会从xib文件载入或者通过代码创建(覆盖loadView方法,自定义其view hierarchy),并返回,如果要判断一个View Controller的view是否已经被加载需要通过其提供的isViewLoaded方法来判断。  <br/>
+view加载后viewDidLoad会被调用,这里可以进行一些数据的请求或加载,用来更新你的界面。 <br/>
+当view将被加入view hierarchy中的时候viewWillAppear会被调用,view完成加入的时候viewDidAppear会被调用,同样当view将要从view hierarchy中移除的时候viewWillDisappear会被调用,完成移除的时候viewDidDisappear会被调用。   <br/>
+当内存紧张的时候,所有的UIViewController对象的didReceiveMemoryWarning会被调用,其默认实现是 如果当前viewController的view的superview是nil的话,则将view释放且viewDidUnload会被调用,viewDidUnload中你可以进行后继的内存清理工作(主要是界面元素的释放,当再次加载的时候需要重建)。</p>
+
+<p>如果想要展示一个View Controller,一般有如下一种途径</p>
+
+<ol>
+<li>设置成Window的rootViewController(iOS 4.0之前UIWindow并没有rootViewController属性,只能通过addSubview的方式添加一个View Controller的view)</li>
+<li>使用某个已经存在的Container来展示,比如使用UINavigationController来展示某个View Controller
+[navigationController pushViewController:vc animated:YES];</li>
+<li>以模态界面的方式展现出来 presentModalViewController</li>
+<li>以addSubview的方式将使其view作为另一个View Controller的view的subView</li>
+</ol>
+
+
+<p>直接使用4种方法是比较危险的,上一级 View Controller并不能对当前View Controller的 生命周期相关的函数进行调用,以及旋转事件的传递等。</p>
+
+<p><br><br></p>
+
+<h3>二.Hierarchy</h3>
+
+<p>我们知道一个View可以将另一个View添加为子View(subview),构成一个View Hierarchy.当某一个View添加到window的View Hierarchy中时,将被“显示”。每一个View Controller管理着的其实就是一个View Hierarchy.而View Controller本身可以有Child View Controller,所以也存在一个 View Controller Hierarchy的概念,当View Controller收到上层传来的诸如旋转，显示事件的时候,需要传递给它的Child View Controller.
+一般情况下,View Hierarchy 和 View Controller Hierarchy需要保持一致性,比如一个View Controller的view的superView是由其parent view controller管理着
+<img src="http://farm8.staticflickr.com/7105/7208538724_c77ed287c2_d.jpg" alt="Hierarchy" /></p>
+
+<p><br><br></p>
+
+<h3>三.Container</h3>
+
+<p>一个iOS的app很少只由一个ViewController组成,除非这个app极其简单。
+当有多个View Controller的时候,我们就需要对这些View Controller进行管理。
+那些负责一个或者多个View Controller的展示并对其视图生命周期进行管理的对象,称之为容器,大部分容器本身也是一个View Controller,这样的容器可以称之为Container View Controller,也有极少数容器不是View Controller,比如UIPopoverController,其继承于NSObject。</p>
+
+<p>我们常用的容器有 UINavigationController,UITabbarController等,一般容器有一些共同的特征:</p>
+
+<ol>
+<li>提供对Child View Controller进行管理的接口,比如添加Child View Controller,切换Child View Controller的显示,移除Child View Controller 等</li>
+<li>容器“拥有”所有的Child View Controller</li>
+<li>容器需要负责 Child View Controller的appearance callback的调用(viewWillAppear,viewDidAppear,viewWillDisaapper,viewDidDisappear),以及旋转事件的传递</li>
+<li>保证view hierarchy 和 view controller hierarchy 层级关系一致,通过parent view controller将child view controller和容器进行关联</li>
+</ol>
+
+
+<p>从上面可以看出来,实现一个Container View Controller并不是一个简单的事情,好在iPhone的界面大小有限,一般情况下一个View Controller的view都是充满界面或者系统自带容器的,我们无需自己创建额外的容器,但是在iPad中情况就不同了。</p>
+
+<p><br><br></p>
+
+<h3>四.Custom Container View Controller</h3>
+
+<p>在iOS 5之前框架并不支持自定义 Container View Controller, iOS 5开始开放了一些新的接口来支持支持自定义容器</p>
+
+<div class="highlight"><pre><code class="objc"><span class="nl">addChildViewController:</span>
+<span class="n">removeFromParentViewController</span>
+<span class="nl">transitionFromViewController:</span><span class="n">toViewController</span><span class="o">:</span><span class="n">duration</span><span class="o">:</span><span class="n">options</span><span class="o">:</span><span class="n">animations</span><span class="o">:</span><span class="n">completion</span><span class="o">:</span>
+<span class="nl">willMoveToParentViewController:</span>
+<span class="nl">didMoveToParentViewController:</span>
+</code></pre></div>
+
+
+<p>其中前两个接口比较重要,可以直接改变View Controller 的 Hierarchy。</p>
+
+<p>有点意外的是,在不做任何额外设置的情况下进行如下操作</p>
+
+<div class="highlight"><pre><code class="objc"><span class="p">[</span><span class="n">viewController</span><span class="p">.</span><span class="n">view</span> <span class="n">addSubview</span><span class="o">:</span><span class="n">otherViewController</span><span class="p">.</span><span class="n">view</span><span class="p">]</span>
+</code></pre></div>
+
+
+<p>iOS 5中otherViewController是可以立刻收到viewWillAppear和viewDidAppear的调用。</p>
+
+<p>至于旋转事件的传递以及其他时机viewWillAppear viewDidAppear的调用是需要建立在
+[viewController addChildViewController:otherViewController]基础上的。</p>
+
+<p>当我们需要在iOS 4上实现自定义容器,或者有时候我们不想让viewWillAppear这类方法被自动调用,而是想自己来控制,这个时候我们就得需要手动来调用这些方法,而不是由框架去自动调用。
+iOS 5中可以很方便的禁用掉自动调用的特性,覆盖automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers返回NO</p>
+
+<p>但是单单覆盖这个方法在iOS5下还是有问题的,当执行下面的语句的时候</p>
+
+<div class="highlight"><pre><code class="objc"><span class="p">[</span><span class="n">viewController</span><span class="p">.</span><span class="n">view</span> <span class="n">addSubview</span><span class="o">:</span><span class="n">otherViewController</span><span class="p">.</span><span class="n">view</span><span class="p">]</span>
+</code></pre></div>
+
+
+<p>otherViewController还是是可以立刻收到viewWillAppear和viewDidAppear的调用。 <br/>
+解决这一问题的方法就是在iOS5的时候调用[viewController.view addSubview:otherViewController.view]之前 进行如下操作</p>
+
+<div class="highlight"><pre><code class="objc"><span class="p">[</span><span class="n">viewController</span> <span class="n">addChildViewController</span><span class="o">:</span><span class="n">otherViewController</span><span class="p">]</span>
+</code></pre></div>
+
+
+<p>总的来说实现兼容iOS 4和iOS 5的容器有不少问题和注意点的</p>
+
+<ol>
+<li>view加入view层级前后分别调用viewWillAppear和viewDidAppear;容器的viewWillAppear,viewDidAppear,viewWillDisappear,viewDidDisappear中需要对当前显示的Child View Controller调用相同的方法,容器需要保证Child View Controller的viewWillAppear调用之前Child View Controller的view已经load了.还有一点就是保证容器的View不会出现bounds为CGRectZero的情况,因为如果此View包含多个subview,其bounds改变的时候subview会根据自己的autoresizingMask改变frame,但是当bounds变为0再变为非0的时候,subview的frame就有可能不是你想要的了(比如某个subview的autoresizingMask为UIViewAutoresizingFlexibleBottomMargin)</li>
+<li>容器的shouldAutorotateToInterfaceOrientation中需要检测每一个Child View Controller的shouldAutorotateToInterfaceOrientation如果一个不支持,则看做不支持</li>
+<li>容器的willRotateToInterfaceOrientation,didRotateFromInterfaceOrientation,willAnimateRotationToInterfaceOrientation方法中需要将这些事件传递给所有的Child View Controller</li>
+<li>由于UIViewController的parentViewController属性为只读,且iOS4中没有提供容器支持的接口（iOS 5中容器支持的接口会间接的维护这个属性）,所以为了使得childViewController和容器得以关联,我们可以顶一个View Controller的基类,添加一个比如叫做superController的属性用来指定对应的parentViewController</li>
+<li>由于UIViewController的interfaceOrientation为只读属性,且iOS5中没有提供容器接口,所以UIViewController的这个interfaceOrientation变的不可信,为了取得当前UIViewController的orientation我们可以用UIWindow下的rootViewController的interfaceOrientation的值</li>
+<li>容器的viewDidUnload方法中需要对view未释放的childViewController的view进行释放,且调用其viewDidUnload方法</li>
+</ol>
+
+
+<blockquote><p>苹果对UIViewController以及其使用有着非常详细的文档 <a href="http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIViewController_Class/Reference/Reference.html">UIViewController Reference</a> , <a href="http://developer.apple.com/library/ios/#featuredarticles/ViewControllerPGforiPhoneOS/Introduction/Introduction.html">ViewController Programming Guide</a>。</p></blockquote>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>使用Jekyll和Github写博客</title>
+      <link href="http://juda-hku.github.io/2012/04/blog-with-jekyll-and-github/"/>
+      <pubDate>2012-04-15T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/04/blog-with-jekyll-and-github</guid>
+      <content:encoded><![CDATA[<p>周末将博客搬到Github上了，使用了<a href="https://github.com/mojombo/jekyll">Jekyll</a>以及<a href="http://pages.github.com">Github Page</a>功能，Github Page直接支持Jekyll。
+Jekyll是一个博客生成引擎，可以将markdown写成的博客生成静态的HTML博客。
+当然Jekyll提供了一些的辅助工具，支持模板，可以辅助你生成分类和标签页。</p>
+
+<p><a href="http://pages.github.com">Github Page</a>是Github的一个非常好的服务，免费，可以绑定域名。</p>
+
+<p>这样彻底摆脱了对Wordpress，摆脱了对PHP环境的依赖，博客使用纯文本的形式也方便备份。</p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Mac&amp;iOS之多线程</title>
+      <link href="http://juda-hku.github.io/2012/02/thread/"/>
+      <pubDate>2012-02-12T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/02/thread</guid>
+      <content:encoded><![CDATA[<ul>
+<li>一.线程概述</li>
+<li>二.创建线程
+
+<ul>
+<li> 1.使用NSThread</li>
+<li> 2.使用NSObject</li>
+<li> 3.POSIX Thread</li>
+</ul>
+</li>
+<li>三.多线程进阶
+
+<ul>
+<li>1.NSOperation &amp; NSOperationQueue</li>
+<li>2.GCD</li>
+</ul>
+</li>
+<li>四.进程间通信
+
+<ul>
+<li>1.和主线程的通信</li>
+<li>2.任意线程间的通信</li>
+</ul>
+</li>
+<li>五.RunLoop</li>
+</ul>
+
+
+<hr />
+
+<h3>一.线程概述</h3>
+
+<p>有些程序是一条直线，起点到终点；有些程序是一个圆，不断循环，直到将它切断。直线的如简单的Hello World，运行打印完,它的生命周期便结束了，像昙花一现那样；圆如操作系统，一直运行直到你关机。  <br/>
+一个运行着的程序就是一个进程或者叫做一个任务，一个进程至少包含一个线程，线程就是程序的执行流。Mac和iOS中的程序启动，创建好一个进程的同时，一个线程便开始运行，这个线程叫主线程。主线程在程序中的地位和其他线程不同，它是其他线程最终的父线程，且所有界面的显示操作即AppKit或UIKit的操作必须在主线程进行。 <br/>
+系统中的每一个进程都有自己独立的虚拟内存空间，而同一个进程中的多个线程则共用进程的内存空间。每创建一个新的线程，都需要一些内存(如每个线程有自己的Stack空间)和消耗一定的CPU时间。另外当多个线程对同一个资源出现争夺的时候需要注意线程安全问题。</p>
+
+<h3>二.创建线程</h3>
+
+<p>创建一个新的线程就是给进程增加了一个执行流，执行流总得有要执行的代码吧，所以新建一个线程需要提供一个函数或者方法作为线程的入口。</p>
+
+<h4>1.使用NSThread</h4>
+
+<p>NSThread提供了创建线程的途径，还可以提供了检测当前线程是否是主线程的方法。
+使用NSThread创建一个新的线程有两种方式：</p>
+
+<ul>
+<li>1.创建一个NSThread的对象，调用其start方法。对于这种方式的NSThread对象的创建，可以使用一个目标对象的方法初始化一个NSThread对象，或者创建一个继承NSThread类的子类，实现其main方法，然后在直接创建这个子类的对象。</li>
+<li>2.使用 <code>detachNewThreadSelector:toTarget:withObject:</code>这个类方法创建一个线程，这个比较直接了，直接使用目标对象的方法作为线程启动入口。</li>
+</ul>
+
+
+<h4>2.使用NSObject</h4>
+
+<p>其实NSObject直接就加入了多线程的支持，允许对象的某个方法在后台运行。如:</p>
+
+<pre><code>[myObj performSelectorInBackground:@selector(doSomething) withObject:nil];
+</code></pre>
+
+<h4>3.POSIX Thread</h4>
+
+<p>由于Mac和iOS都是基于Darwin系统，Darwin系统的XUN内核，是基于Mach和BSD的，继承了BSD的POSIX接口，所以可以直接使用POSIX线程的相关接口来使用线程。</p>
+
+<p>创建线程的接口为 <code>pthread_create</code>，当然在创建之前可以通过相关函数设置好线程的属性。以下为POSIX线程使用简单的例子。</p>
+
+<div class="highlight"><pre><code class="c"><span class="c1">//</span>
+<span class="c1">//  main.c</span>
+<span class="c1">//  pthread</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by Lu Kejin on 1/27/12.</span>
+<span class="c1">//  Copyright (c) 2012 Taobao.com. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;pthread.h&gt;</span>
+<span class="cp">#include &lt;unistd.h&gt;</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">pthreadRoutine</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="kt">pthread_attr_t</span>  <span class="n">attr</span><span class="p">;</span>
+    <span class="kt">pthread_t</span>       <span class="n">pthreadID</span><span class="p">;</span>
+    <span class="kt">int</span>             <span class="n">returnVal</span><span class="p">;</span>
+    
+    <span class="n">returnVal</span> <span class="o">=</span> <span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+    <span class="n">returnVal</span> <span class="o">=</span> <span class="n">pthread_attr_setdetachstate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">PTHREAD_CREATE_DETACHED</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">threadError</span> <span class="o">=</span> <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pthreadID</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pthreadRoutine</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">returnVal</span> <span class="o">=</span> <span class="n">pthread_attr_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">threadError</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Report an error.</span>
+    <span class="p">}</span>
+    
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">pthreadRoutine</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;count = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">count</span><span class="o">++</span><span class="p">);</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<h3>三.多线程进阶</h3>
+
+<h4>NSOperation&amp;NSOperationQueue</h4>
+
+<p>很多时候我们使用多线程，需要控制线程的并发数，毕竟线程也是消耗系统资源的，当程序中同时运行的线程过多时，系统必然变慢。
+所以很多时候我们会控制同时运行线程的数目。</p>
+
+<p>NSOperation可以封装我们的操作，然后将创建好的NSOperation对象放到NSOperationQueue中，OperationQueue便开始启动新的线程去执行队列中的操作，OperationQueue的并发度是可以通过如下方式进行设置:</p>
+
+<pre><code>- (void)setMaxConcurrentOperationCount:(NSInteger)count
+</code></pre>
+
+<h4>GCD</h4>
+
+<p>GCD是Grand Central Dispatch的缩写，是一系列的BSD层面的接口，在Mac 10.6 和iOS4.0以后才引入的，且现在NSOperation和NSOperationQueue的多线程的实现就是基于GCD的。目前这个特性也被移植到FreeBSD上了，可以查看libdispatch这个开源项目。</p>
+
+<p>比如一个在UIImageView中显示一个比较大的图片</p>
+
+<div class="highlight"><pre><code class="objc"><span class="kt">dispatch_queue_t</span> <span class="n">imageDownloadQueue</span> <span class="o">=</span> <span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>    
+<span class="n">dispatch_async</span><span class="p">(</span><span class="n">imageDownloadQueue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+        <span class="n">NSURL</span> <span class="o">*</span><span class="n">imageURL</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="n">URLWithString</span><span class="o">:</span><span class="s">@&quot;http://test.com/test.png&quot;</span><span class="p">];</span>
+       <span class="n">NSData</span> <span class="o">*</span><span class="n">imageData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="n">dataWithContentsOfURL</span><span class="o">:</span><span class="n">imageURL</span><span class="p">];</span>
+        <span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="n">imageWithData</span><span class="o">:</span><span class="n">imageData</span><span class="p">];</span>
+       <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+            <span class="p">[</span><span class="n">imageView</span> <span class="n">setImage</span><span class="o">:</span><span class="n">image</span><span class="p">];</span><span class="c1">//UIKit必须在主线程执行</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+</code></pre></div>
+
+
+<p>当然，GCD除了处理多线程外还有很多非常好的功能，其建立在强大的kqueue之上，效率也能够得到保障。</p>
+
+<h3>四.线程间通信</h3>
+
+<p>线程间通信和进程间通信从本质上讲是相似的。线程间通信就是在进程内的两个执行流之间进行数据的传递，就像两条并行的河流之间挖出了一道单向流动长沟，使得一条河流中的水可以流入另一条河流，物质得到了传递。</p>
+
+<p><strong>1.performSelect On The Thread</strong></p>
+
+<p>框架为我们提供了强制在某个线程中执行方法的途径,如果两个非主线程的线程需要相互间通信，可以先将自己的当前线程对象注册到某个全局的对象中去，这样相互之间就可以获取对方的线程对象，然后就可以使用下面的方法进行线程间的通信了，由于主线程比较特殊，所以框架直接提供了在出线程执行的方法。</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">@interface</span> <span class="nc">NSObject</span> <span class="nl">(NSThreadPerformAdditions)</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelectorOnMainThread:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">withObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">wait</span> <span class="nf">modes:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">array</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelectorOnMainThread:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">withObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span>
+<span class="c1">// equivalent to the first method with kCFRunLoopCommonModes</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread:</span><span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">wait</span> <span class="nf">modes:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">array</span> <span class="n">NS_AVAILABLE</span><span class="p">(</span><span class="mi">10</span><span class="n">_5</span><span class="p">,</span> <span class="mi">2</span><span class="n">_0</span><span class="p">);</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread:</span><span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">wait</span> <span class="n">NS_AVAILABLE</span><span class="p">(</span><span class="mi">10</span><span class="n">_5</span><span class="p">,</span> <span class="mi">2</span><span class="n">_0</span><span class="p">);</span>
+<span class="c1">// equivalent to the first method with kCFRunLoopCommonModes</span>
+    <span class="p">...</span>
+<span class="k">@end</span>
+</code></pre></div>
+
+
+<p><strong>2.Mach Port</strong> <br/>
+在苹果的Thread Programming Guide的Run Pool一节的Configuring a Port-Based Input Source
+这一段中就有使用Mach Port进行线程间通信的例子。
+其实质就是父线程创建一个NSMachPort对象，在创建子线程的时候以参数的方式将其传递给子线程，这样子线程中就可以向这个传过来的NSMachPort对象发送消息，如果想让父线程也可以向子线程发消息的话，那么子线程可以先向父线程发个特殊的消息，传过来的是自己创建的另一个NSMachPort对象，这样父线程便持有了子线程创建的port对象了，可以向这个子线程的port对象发送消息了。</p>
+
+<p>当然各自的port对象需要设置delegate以及schdule到自己所在线程的RunLoop中，这样来了消息之后，处理port消息的delegate方法会被调用，你就可以自己处理消息了。</p>
+
+<h3>五.RunLoop</h3>
+
+<p>RunLoop从字面上看是运行循环的意思，这一点也不错，它确实就是一个循环的概念，或者准确的说是线程中的循环。
+本文一开始就提到有些程序是一个圈，这个圈本质上就是这里的所谓的RunLoop，就是一个循环，只是这个循环里加入很多特性。 <br/>
+首先循环体的开始需要检测是否有需要处理的事件，如果有则去处理，如果没有则进入睡眠以节省CPU时间。
+所以重点便是这个需要处理的事件，在RunLoop中，需要处理的事件分两类，一种是输入源，一种是定时器，定时器好理解就是那些需要定时执行的操作，输入源分三类：performSelector源，基于端口（Mach port）的源，以及自定义的源。编程的时候可以添加自己的源。RunLoop还有一个观察者Observer的概念，可以往RunLoop中加入自己的观察者以便监控着RunLoop的运行过程，CFRunLoop.h中定义了所有观察者的类型:</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">enum</span> <span class="n">CFRunLoopActivity</span> <span class="p">{</span>
+   <span class="n">kCFRunLoopEntry</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">),</span>
+   <span class="n">kCFRunLoopBeforeTimers</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">),</span>
+   <span class="n">kCFRunLoopBeforeSources</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">),</span>
+   <span class="n">kCFRunLoopBeforeWaiting</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span><span class="p">),</span>
+   <span class="n">kCFRunLoopAfterWaiting</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">),</span>
+   <span class="n">kCFRunLoopExit</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">),</span>
+   <span class="n">kCFRunLoopAllActivities</span> <span class="o">=</span> <span class="mh">0x0FFFFFFFU</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="k">enum</span> <span class="n">CFRunLoopActivity</span> <span class="n">CFRunLoopActivity</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>如果你使用过select系统调用写过程序你便可以快速的理解runloop事件源的概念，本质上讲事件源的机制和select一样是一种多路复用IO的实现，在一个线程中我们需要做的事情并不单一，如需要处理定时钟事件，需要处理用户的触控事件，需要接受网络远端发过来的数据，将这些需要做的事情统统注册到事件源中，每一次循环的开始便去检查这些事件源是否有需要处理的数据，有的话则去处理。
+拿具体的应用举个例子，NSURLConnection网络数据请求，默认是异步的方式，其实现原理就是创建之后将其作为事件源加入到当前的RunLoop，而等待网络响应以及网络数据接受的过程则在一个新创建的独立的线程中完成，当这个线程处理到某个阶段的时候比如得到对方的响应或者接受完了网络数据之后便通知之前的线程去执行其相关的delegate方法。所以在Cocoa中经常看到<code>scheduleInRunLoop:forMode:</code>这样的方法，这个便是将其加入到事件源中，当检测到某个事件发生的时候，相关的delegate方法便被调用。对于CoreFoundation这一层而言，通常的模式是创建输入源，然后将输入源通过<code>CFRunLoopAddSource</code>函数加入到RunLoop中，相关事件发生后，相关的回调函数会被调用。如CFSocket的使用。
+另外RunLoop中还有一个运行模式的概念，每一个运行循环必然运行在某个模式下，而模式的存在是为了过滤事件源和观察者的，只有那些和当前RunLoop运行模式一致的事件源和观察者才会被激活。</p>
+
+<p>每一个线程都有其对应的RunLoop，但是默认非主线程的RunLoop是没有运行的，需要为RunLoop添加至少一个事件源，然后去run它。一般情况下我们是没有必要去启用线程的RunLoop的，除非你在一个单独的线程中需要长久的检测某个事件。</p>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Bonjour</title>
+      <link href="http://juda-hku.github.io/2012/02/bonjour/"/>
+      <pubDate>2012-02-03T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2012/02/bonjour</guid>
+      <content:encoded><![CDATA[<h3>一.Bonjour介绍</h3>
+
+<p>一般在进行Socket编程或者网络访问的时候，首先需要确认对方网络服务已经开启，且需要知道对方的域名或地址以及端口，然后才可以进行进一步操作。在互联网上好点，网络服务方一般常年开启，且一般IP地址是固定的，另由于DNS服务的存在，只要记住对方的域名便可以。但是在局域网，设备不一定连在上面，即使连上了，服务也不一定开了，每当设备连接到局域网的时候，IP地址一般都是动态分配的，所以情况变的复杂。Bonjour的存在便是苹果为了解决局域网设备间连接麻烦的问题。 <br/>
+直白的说Bonjour就是是一种协议，使得局域网中的计算机可以方便的发布服务，发现服务和连接服务，达到零配置（<a href="http://zeroconf.org">Zeroconf</a>）的目的。
+Zeroconf Working Group指出要实现零配置网络服务的3个要求：</p>
+
+<blockquote><ul>
+<li>IP地址</li>
+<li><strong>名字</strong> 到 <strong>IP地址</strong> 的转换（即使没有DNS服务器的情况下）</li>
+<li>发现网络中的服务</li>
+</ul>
+</blockquote>
+
+<p>对于第一个要求相关系统和设备可以直接支持的，如动态IP地址分配。 <br/>
+第二个要求则可以通过多播（UDP协议向局域网内一组机器发送数据）的方式发送 类似DNS查询的请求，开启着的网络服务收到之后便作出回应，告知自己的名字。 <br/>
+第三个要求则通过DNS-SD来实现</p>
+
+<p>Bonjour一般的工作模式便是：在同一个局域网中，一方开启服务，通过Bonjour接口将这个服务发布，服务搜索方在服务列表中便可以看到对应的设备的名字，选择设备便可以进行连接了。整个过程无需事先知道服务发布方的IP地址和端口号。 <br/>
+我们常用的软件如iTunes的共享，keynote的remote控制或者支持Bonjour协议的打印机都可以看到Bonjour的影子。</p>
+
+<h3>二.Bonjour的实现及使用</h3>
+
+<p>从上面的描述可以看出，Bonjour的用途便是在局域网内发布服务和搜索服务。
+下面从实现层面讲解Bonjour。</p>
+
+<ul>
+<li>Multicast DNS Responder(mDNSResponder,开源项目)</li>
+<li>Low-Level Socket Based API(dns_sd.h, The DNS Service Discovery API)</li>
+<li>CoreFoundation(CFNetService/CFNetServiceBroswer)</li>
+<li>Foundation(NSNetService/NSNetServiceBroswer)</li>
+</ul>
+
+
+<p>一般情况下我们使用Foundation这一层接口就可以了，也是最方便的。
+当然服务方在发布服务之前你得先启好网络服务，比如listening socket创建好，且开始侦听某个端口.</p>
+
+<p><strong>1.发布服务</strong></p>
+
+<div class="highlight"><pre><code class="objc"><span class="n">netService</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">NSNetService</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">initWithDomain</span><span class="o">:</span><span class="s">@&quot;&quot;</span>
+                                              <span class="nl">type:</span><span class="s">@&quot;_test._tcp&quot;</span>
+                                              <span class="nl">name:</span><span class="s">@&quot;&quot;</span>
+                                              <span class="nl">port:</span><span class="n">port</span><span class="p">]</span> <span class="n">autorelease</span><span class="p">];</span>
+<span class="k">if</span><span class="p">(</span><span class="n">netService</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">netService</span> <span class="n">scheduleInRunLoop</span><span class="o">:</span><span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span>
+                               <span class="nl">forMode:</span><span class="n">NSRunLoopCommonModes</span><span class="p">];</span>
+    <span class="n">netService</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">netService</span> <span class="n">publish</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p><strong>2.浏览服务</strong></p>
+
+<ul>
+<li>创建Service Broswer, 需要指定service type和domain，得和发布服务时候的type对应。还得设置delegate，然后实现其delegate方法，以便发现了服务之后进行处理以及对发现的服务进行获取IP地址和端口的结果进行处理。</li>
+</ul>
+
+
+<div class="highlight"><pre><code class="objc"><span class="n">testServiceBrowser</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSNetServiceBrowser</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+<span class="n">testServiceBrowser</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">[</span><span class="n">testServiceBrowser</span> <span class="n">searchForServicesOfType</span><span class="o">:</span><span class="s">@&quot;_test._tcp&quot;</span> <span class="n">inDomain</span><span class="o">:</span><span class="s">@&quot;&quot;</span><span class="p">];</span>
+</code></pre></div>
+
+
+<ul>
+<li>实现Service Broswer 的delegate方法，处理服务增加或减少的事件</li>
+</ul>
+
+
+<div class="highlight"><pre><code class="objc"><span class="c1">//pragma mark NetServiceBroswer Delegate</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">netServiceBrowser:</span><span class="p">(</span><span class="n">NSNetServiceBrowser</span><span class="o">*</span><span class="p">)</span><span class="nv">netServiceBrowser</span>
+           <span class="nl">didFindService:</span><span class="p">(</span><span class="n">NSNetService</span><span class="o">*</span><span class="p">)</span><span class="nv">service</span>
+                <span class="nl">moreComing:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">moreComing</span> <span class="p">{</span>
+   <span class="p">[</span><span class="n">netServiceArray</span> <span class="n">addObject</span><span class="o">:</span><span class="n">service</span><span class="p">];</span>
+   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">moreComing</span><span class="p">)</span> <span class="p">{</span>
+       <span class="p">[</span><span class="n">serviceTableView</span> <span class="n">reloadData</span><span class="p">];</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">netServiceBrowser:</span><span class="p">(</span><span class="n">NSNetServiceBrowser</span><span class="o">*</span><span class="p">)</span><span class="nv">netServiceBrowser</span>
+        <span class="nl">didRemoveService:</span><span class="p">(</span><span class="n">NSNetService</span><span class="o">*</span><span class="p">)</span><span class="nv">service</span>
+               <span class="nl">moreComing:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">moreComing</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">netServiceArray</span> <span class="n">removeObject</span><span class="o">:</span><span class="n">service</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">moreComing</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">serviceTableView</span> <span class="n">reloadData</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<ul>
+<li>连接服务</li>
+</ul>
+
+
+<p>上面发现的Net Service是不带IP地址和端口信息的。 <br/>
+从服务列表中选择一个已经发现的服务，进行Resolve，便可以获取服务的详细信息了。</p>
+
+<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">connect:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">{</span>
+    <span class="n">NSUInteger</span> <span class="n">selectedRow</span> <span class="o">=</span> <span class="p">[</span><span class="n">serviceTableView</span> <span class="n">selectedRow</span><span class="p">];</span>
+    <span class="n">NSNetService</span> <span class="o">*</span><span class="n">selectedServiece</span> <span class="o">=</span> <span class="p">[</span><span class="n">netServiceArray</span> <span class="n">objectAtIndex</span><span class="o">:</span><span class="n">selectedRow</span><span class="p">];</span>
+    <span class="n">selectedServiece</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">selectedServiece</span> <span class="n">resolveWithTimeout</span><span class="o">:</span><span class="mf">5.0</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>Resolve成功</p>
+
+<div class="highlight"><pre><code class="objc"><span class="c1">//NSNetService Delegate</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">netServiceDidResolveAddress:</span><span class="p">(</span><span class="n">NSNetService</span> <span class="o">*</span><span class="p">)</span><span class="nv">sender</span><span class="p">{</span>
+     <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;service ip:%@ port:%d&quot;</span><span class="p">,</span><span class="n">sender</span><span class="p">.</span><span class="n">address</span><span class="p">,</span><span class="n">sender</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">sender</span> <span class="n">getInputStream</span><span class="o">:&amp;</span><span class="n">inputStream</span> <span class="n">outputStream</span><span class="o">:&amp;</span><span class="n">outputStream</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">outputStream</span> <span class="n">scheduleInRunLoop</span><span class="o">:</span><span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span>
+                                         <span class="nl">forMode:</span><span class="n">NSDefaultRunLoopMode</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">outputStream</span> <span class="n">open</span><span class="p">];</span>
+        <span class="c1">//发送数据</span>
+        <span class="n">NSData</span> <span class="o">*</span><span class="n">helloData</span> <span class="o">=</span> <span class="p">[</span><span class="s">@&quot;Hello&quot;</span> <span class="n">dataUsingEncoding</span><span class="o">:</span><span class="n">NSUTF8StringEncoding</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">outputStream</span> <span class="n">write</span><span class="o">:</span><span class="p">[</span><span class="n">helloData</span> <span class="n">bytes</span><span class="p">]</span> <span class="n">maxLength</span><span class="o">:</span><span class="p">[</span><span class="n">helloData</span> <span class="n">length</span><span class="p">]];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>上面的代码充分利用了输入输出流进行通信。如果你自己的使用socket的连接也是可以的，因为这个时候已经可以获取了对方的IP地址和端口了。</p>
+]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>
