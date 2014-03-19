@@ -1,0 +1,3 @@
+to preview, be sure to pass an empty string to --baseurl option and you can view it localhost:4000
+
+jekyll serve --baseurl ''

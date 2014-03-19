@@ -1,0 +1,6 @@
+markdown: rdiscount
+permalink: /:year/:month/:title/
+url: http://juda-hku.github.io/blog/
+author: 鞠达
+pygments: true
+paginate: 24
