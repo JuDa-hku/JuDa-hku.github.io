@@ -1,0 +1,120 @@
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 1 To set up org-mode</a></li>
+<li><a href="#sec-2">2. 2 To write more effectively.</a></li>
+<li><a href="#sec-3">3. 3 More to say</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 1 To set up org-mode</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+It is pretty easy to find the website to know how. For example <i>Org mode</i>, to cite the secentence
+from it, <i>Org mode is for keeping notes, maintaing TODO lists, planning projects, and authoring documents with a fast and effective plain-txt system</i>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 2 To write more effectively.</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+As we have done. We use * to indicate a new paragraph. In fact we can use this.
+</p>
+<pre class="example">
+use different number of * to denote the structure
+</pre>
+<p>
+Another way to structure your paper.
+</p>
+<pre class="example">
++ Category 1
++ Category 2
+ + Category 2.1
+ + Category 2.2
++ Category 3
+</pre>
+<p>
+The result is:
+</p>
+<ul class="org-ul">
+<li>Category 1
+</li>
+<li>Category 2
+<ul class="org-ul">
+<li>Category 2.1
+</li>
+<li>Category 2.2
+</li>
+</ul>
+</li>
+<li>Category 3
+</li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 3 More to say</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Boldface</b>, <span class="underline">underline</span>, <i>italic</i>, <code>code</code>, <del>needless</del>, 
+<i>google website</i>
+</p>
+<pre class="example">
+*Boldface*, _underline_, /italic/, =code=, +needless+,
+[[www.google.cn][google website]]
+</pre>
+<p>
+To cite things<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup> 
+Three ways to insert code or words in org mode.
+case I:#+BEGIN<sub>EXAMPLE</sub> things _#+END<sub>EXAMPLE</sub>, case II:#+BEGIN<sub>VERSE</sub> things #+END<sub>VERSE</sub>, case III: #+BEGIN<sub>QUOTE</sub> things #+END<sub>QUOTE</sub>
+</p>
+
+<pre class="example">
+Everything should be as simple as possible,
+but not any simple.  --Albert Einstein
+</pre>
+
+<p class="verse">
+Everything should be as simple as possible,<br  />
+but not any simple.  &#x2013;Albert Einstein<br  />
+</p>
+
+<blockquote>
+<p>
+Everything should be as simple as possible,
+but not any simple.  &#x2013;Albert Einstein
+</p>
+</blockquote>
+
+
+
+<p>
+By using &lt;q+tab, &lt;v+tab, &lt;e+tab, we can get kinds of easy templates.
+To insert code, use &lt;s+tab to get the template.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-(C)">for(int i=0,i&lt;10;i++){
+sum+=i;
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+this is the case.
+</p></div>
+
+
+</div>
+</div>
