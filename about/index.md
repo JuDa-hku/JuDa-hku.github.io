@@ -9,4 +9,4 @@ I love statistics and coding.
 
 email:judanju@gmail.com      
 github : [https://github.com/juda-hku](https://github.com/juda-hku)    
-(http://github.com/juda-hku/juda-hku.github/raw/master/dear.png)
+![image](http://github.com/juda-hku/juda-hku.github.io/raw/master/dear.png)

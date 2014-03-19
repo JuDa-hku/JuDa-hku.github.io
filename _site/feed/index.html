@@ -7,8 +7,137 @@
     <title>鞠达</title>
     <link href="http://juda-hku.github.io/feed/" rel="self" />
     <link href="http://juda-hku.github.io" />
-    <lastBuildDate>2014-03-19T18:03:40+08:00</lastBuildDate>
+    <lastBuildDate>2014-03-19T20:51:10+08:00</lastBuildDate>
     <webMaster>judanju@gmail.com</webMaster>
+    
+    <item>
+      <title>Use org mode in emacs(1)</title>
+      <link href="http://juda-hku.github.io/2014/03/use+org+mode+in+emacs%281%29/"/>
+      <pubDate>2014-03-19T00:00:00+08:00</pubDate>
+      <author>鞠达</author>
+      <guid>http://juda-hku.github.io/2014/03/use org mode in emacs(1)</guid>
+      <content:encoded><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 1 To set up org-mode</a></li>
+<li><a href="#sec-2">2. 2 To write more effectively.</a></li>
+<li><a href="#sec-3">3. 3 More to say</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 1 To set up org-mode</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+It is pretty easy to find the website to know how. For example <i>Org mode</i>, to cite the secentence
+from it, <i>Org mode is for keeping notes, maintaing TODO lists, planning projects, and authoring documents with a fast and effective plain-txt system</i>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 2 To write more effectively.</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+As we have done. We use * to indicate a new paragraph. In fact we can use this.
+</p>
+<pre class="example">
+use different number of * to denote the structure
+</pre>
+<p>
+Another way to structure your paper.
+</p>
+<pre class="example">
++ Category 1
++ Category 2
+ + Category 2.1
+ + Category 2.2
++ Category 3
+</pre>
+<p>
+The result is:
+</p>
+<ul class="org-ul">
+<li>Category 1
+</li>
+<li>Category 2
+<ul class="org-ul">
+<li>Category 2.1
+</li>
+<li>Category 2.2
+</li>
+</ul>
+</li>
+<li>Category 3
+</li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 3 More to say</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Boldface</b>, <span class="underline">underline</span>, <i>italic</i>, <code>code</code>, <del>needless</del>, 
+<i>google website</i>
+</p>
+<pre class="example">
+*Boldface*, _underline_, /italic/, =code=, +needless+,
+[[www.google.cn][google website]]
+</pre>
+<p>
+To cite things<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup> 
+Three ways to insert code or words in org mode.
+case I:#+BEGIN<sub>EXAMPLE</sub> things _#+END<sub>EXAMPLE</sub>, case II:#+BEGIN<sub>VERSE</sub> things #+END<sub>VERSE</sub>, case III: #+BEGIN<sub>QUOTE</sub> things #+END<sub>QUOTE</sub>
+</p>
+
+<pre class="example">
+Everything should be as simple as possible,
+but not any simple.  --Albert Einstein
+</pre>
+
+<p class="verse">
+Everything should be as simple as possible,<br  />
+but not any simple.  &#x2013;Albert Einstein<br  />
+</p>
+
+<blockquote>
+<p>
+Everything should be as simple as possible,
+but not any simple.  &#x2013;Albert Einstein
+</p>
+</blockquote>
+
+
+
+<p>
+By using &lt;q+tab, &lt;v+tab, &lt;e+tab, we can get kinds of easy templates.
+To insert code, use &lt;s+tab to get the template.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-(C)">for(int i=0,i&lt;10;i++){
+sum+=i;
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+this is the case.
+</p></div>
+
+
+</div>
+</div>
+]]></content:encoded>
+    </item>
     
     <item>
       <title>浅谈Gitosis实现原理</title>
@@ -865,140 +994,6 @@ Jekyll是一个博客生成引擎，可以将markdown写成的博客生成静态
 另外RunLoop中还有一个运行模式的概念，每一个运行循环必然运行在某个模式下，而模式的存在是为了过滤事件源和观察者的，只有那些和当前RunLoop运行模式一致的事件源和观察者才会被激活。</p>
 
 <p>每一个线程都有其对应的RunLoop，但是默认非主线程的RunLoop是没有运行的，需要为RunLoop添加至少一个事件源，然后去run它。一般情况下我们是没有必要去启用线程的RunLoop的，除非你在一个单独的线程中需要长久的检测某个事件。</p>
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>Bonjour</title>
-      <link href="http://juda-hku.github.io/2012/02/bonjour/"/>
-      <pubDate>2012-02-03T00:00:00+08:00</pubDate>
-      <author>鞠达</author>
-      <guid>http://juda-hku.github.io/2012/02/bonjour</guid>
-      <content:encoded><![CDATA[<h3>一.Bonjour介绍</h3>
-
-<p>一般在进行Socket编程或者网络访问的时候，首先需要确认对方网络服务已经开启，且需要知道对方的域名或地址以及端口，然后才可以进行进一步操作。在互联网上好点，网络服务方一般常年开启，且一般IP地址是固定的，另由于DNS服务的存在，只要记住对方的域名便可以。但是在局域网，设备不一定连在上面，即使连上了，服务也不一定开了，每当设备连接到局域网的时候，IP地址一般都是动态分配的，所以情况变的复杂。Bonjour的存在便是苹果为了解决局域网设备间连接麻烦的问题。 <br/>
-直白的说Bonjour就是是一种协议，使得局域网中的计算机可以方便的发布服务，发现服务和连接服务，达到零配置（<a href="http://zeroconf.org">Zeroconf</a>）的目的。
-Zeroconf Working Group指出要实现零配置网络服务的3个要求：</p>
-
-<blockquote><ul>
-<li>IP地址</li>
-<li><strong>名字</strong> 到 <strong>IP地址</strong> 的转换（即使没有DNS服务器的情况下）</li>
-<li>发现网络中的服务</li>
-</ul>
-</blockquote>
-
-<p>对于第一个要求相关系统和设备可以直接支持的，如动态IP地址分配。 <br/>
-第二个要求则可以通过多播（UDP协议向局域网内一组机器发送数据）的方式发送 类似DNS查询的请求，开启着的网络服务收到之后便作出回应，告知自己的名字。 <br/>
-第三个要求则通过DNS-SD来实现</p>
-
-<p>Bonjour一般的工作模式便是：在同一个局域网中，一方开启服务，通过Bonjour接口将这个服务发布，服务搜索方在服务列表中便可以看到对应的设备的名字，选择设备便可以进行连接了。整个过程无需事先知道服务发布方的IP地址和端口号。 <br/>
-我们常用的软件如iTunes的共享，keynote的remote控制或者支持Bonjour协议的打印机都可以看到Bonjour的影子。</p>
-
-<h3>二.Bonjour的实现及使用</h3>
-
-<p>从上面的描述可以看出，Bonjour的用途便是在局域网内发布服务和搜索服务。
-下面从实现层面讲解Bonjour。</p>
-
-<ul>
-<li>Multicast DNS Responder(mDNSResponder,开源项目)</li>
-<li>Low-Level Socket Based API(dns_sd.h, The DNS Service Discovery API)</li>
-<li>CoreFoundation(CFNetService/CFNetServiceBroswer)</li>
-<li>Foundation(NSNetService/NSNetServiceBroswer)</li>
-</ul>
-
-
-<p>一般情况下我们使用Foundation这一层接口就可以了，也是最方便的。
-当然服务方在发布服务之前你得先启好网络服务，比如listening socket创建好，且开始侦听某个端口.</p>
-
-<p><strong>1.发布服务</strong></p>
-
-<div class="highlight"><pre><code class="objc"><span class="n">netService</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">NSNetService</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">initWithDomain</span><span class="o">:</span><span class="s">@&quot;&quot;</span>
-                                              <span class="nl">type:</span><span class="s">@&quot;_test._tcp&quot;</span>
-                                              <span class="nl">name:</span><span class="s">@&quot;&quot;</span>
-                                              <span class="nl">port:</span><span class="n">port</span><span class="p">]</span> <span class="n">autorelease</span><span class="p">];</span>
-<span class="k">if</span><span class="p">(</span><span class="n">netService</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">[</span><span class="n">netService</span> <span class="n">scheduleInRunLoop</span><span class="o">:</span><span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span>
-                               <span class="nl">forMode:</span><span class="n">NSRunLoopCommonModes</span><span class="p">];</span>
-    <span class="n">netService</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
-    <span class="p">[</span><span class="n">netService</span> <span class="n">publish</span><span class="p">];</span>
-<span class="p">}</span>
-</code></pre></div>
-
-
-<p><strong>2.浏览服务</strong></p>
-
-<ul>
-<li>创建Service Broswer, 需要指定service type和domain，得和发布服务时候的type对应。还得设置delegate，然后实现其delegate方法，以便发现了服务之后进行处理以及对发现的服务进行获取IP地址和端口的结果进行处理。</li>
-</ul>
-
-
-<div class="highlight"><pre><code class="objc"><span class="n">testServiceBrowser</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSNetServiceBrowser</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-<span class="n">testServiceBrowser</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
-<span class="p">[</span><span class="n">testServiceBrowser</span> <span class="n">searchForServicesOfType</span><span class="o">:</span><span class="s">@&quot;_test._tcp&quot;</span> <span class="n">inDomain</span><span class="o">:</span><span class="s">@&quot;&quot;</span><span class="p">];</span>
-</code></pre></div>
-
-
-<ul>
-<li>实现Service Broswer 的delegate方法，处理服务增加或减少的事件</li>
-</ul>
-
-
-<div class="highlight"><pre><code class="objc"><span class="c1">//pragma mark NetServiceBroswer Delegate</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">netServiceBrowser:</span><span class="p">(</span><span class="n">NSNetServiceBrowser</span><span class="o">*</span><span class="p">)</span><span class="nv">netServiceBrowser</span>
-           <span class="nl">didFindService:</span><span class="p">(</span><span class="n">NSNetService</span><span class="o">*</span><span class="p">)</span><span class="nv">service</span>
-                <span class="nl">moreComing:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">moreComing</span> <span class="p">{</span>
-   <span class="p">[</span><span class="n">netServiceArray</span> <span class="n">addObject</span><span class="o">:</span><span class="n">service</span><span class="p">];</span>
-   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">moreComing</span><span class="p">)</span> <span class="p">{</span>
-       <span class="p">[</span><span class="n">serviceTableView</span> <span class="n">reloadData</span><span class="p">];</span>
-   <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">netServiceBrowser:</span><span class="p">(</span><span class="n">NSNetServiceBrowser</span><span class="o">*</span><span class="p">)</span><span class="nv">netServiceBrowser</span>
-        <span class="nl">didRemoveService:</span><span class="p">(</span><span class="n">NSNetService</span><span class="o">*</span><span class="p">)</span><span class="nv">service</span>
-               <span class="nl">moreComing:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">moreComing</span> <span class="p">{</span>
-    <span class="p">[</span><span class="n">netServiceArray</span> <span class="n">removeObject</span><span class="o">:</span><span class="n">service</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">moreComing</span><span class="p">)</span> <span class="p">{</span>
-        <span class="p">[</span><span class="n">serviceTableView</span> <span class="n">reloadData</span><span class="p">];</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-
-<ul>
-<li>连接服务</li>
-</ul>
-
-
-<p>上面发现的Net Service是不带IP地址和端口信息的。 <br/>
-从服务列表中选择一个已经发现的服务，进行Resolve，便可以获取服务的详细信息了。</p>
-
-<div class="highlight"><pre><code class="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">connect:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">{</span>
-    <span class="n">NSUInteger</span> <span class="n">selectedRow</span> <span class="o">=</span> <span class="p">[</span><span class="n">serviceTableView</span> <span class="n">selectedRow</span><span class="p">];</span>
-    <span class="n">NSNetService</span> <span class="o">*</span><span class="n">selectedServiece</span> <span class="o">=</span> <span class="p">[</span><span class="n">netServiceArray</span> <span class="n">objectAtIndex</span><span class="o">:</span><span class="n">selectedRow</span><span class="p">];</span>
-    <span class="n">selectedServiece</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
-    <span class="p">[</span><span class="n">selectedServiece</span> <span class="n">resolveWithTimeout</span><span class="o">:</span><span class="mf">5.0</span><span class="p">];</span>
-<span class="p">}</span>
-</code></pre></div>
-
-
-<p>Resolve成功</p>
-
-<div class="highlight"><pre><code class="objc"><span class="c1">//NSNetService Delegate</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">netServiceDidResolveAddress:</span><span class="p">(</span><span class="n">NSNetService</span> <span class="o">*</span><span class="p">)</span><span class="nv">sender</span><span class="p">{</span>
-     <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;service ip:%@ port:%d&quot;</span><span class="p">,</span><span class="n">sender</span><span class="p">.</span><span class="n">address</span><span class="p">,</span><span class="n">sender</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">([</span><span class="n">sender</span> <span class="n">getInputStream</span><span class="o">:&amp;</span><span class="n">inputStream</span> <span class="n">outputStream</span><span class="o">:&amp;</span><span class="n">outputStream</span><span class="p">])</span> <span class="p">{</span>
-        <span class="p">[</span><span class="n">outputStream</span> <span class="n">scheduleInRunLoop</span><span class="o">:</span><span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span>
-                                         <span class="nl">forMode:</span><span class="n">NSDefaultRunLoopMode</span><span class="p">];</span>
-        <span class="p">[</span><span class="n">outputStream</span> <span class="n">open</span><span class="p">];</span>
-        <span class="c1">//发送数据</span>
-        <span class="n">NSData</span> <span class="o">*</span><span class="n">helloData</span> <span class="o">=</span> <span class="p">[</span><span class="s">@&quot;Hello&quot;</span> <span class="n">dataUsingEncoding</span><span class="o">:</span><span class="n">NSUTF8StringEncoding</span><span class="p">];</span>
-        <span class="p">[</span><span class="n">outputStream</span> <span class="n">write</span><span class="o">:</span><span class="p">[</span><span class="n">helloData</span> <span class="n">bytes</span><span class="p">]</span> <span class="n">maxLength</span><span class="o">:</span><span class="p">[</span><span class="n">helloData</span> <span class="n">length</span><span class="p">]];</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-
-<p>上面的代码充分利用了输入输出流进行通信。如果你自己的使用socket的连接也是可以的，因为这个时候已经可以获取了对方的IP地址和端口了。</p>
 ]]></content:encoded>
     </item>
     
