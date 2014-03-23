@@ -1,63 +1,39 @@
 ---
 layout: post
-<<<<<<< HEAD
-title: For the try
+title: About markdown and math formula in pandoc
 categories:
 - Programming
 tags:
 - C
 - Algorithm
 ---
-
-*介绍
-=======
-title: About markdown and math formula in pandoc
-categories:
-- Programming
-tags:
-- markdown
-- emacs
-- pandoc
-
----
-
 * 介绍
 * 在emacs使用pandoc并编译数学公式
->>>>>>> 08ba88a3473131293f4d931a3136dfb6e3850a17
 
 ---
 
-
 ### 1.introducation
-<<<<<<< HEAD
-[google us](http://google.us/)
->这样就引用啦
-=======
-[google us](http://google.us/)\\
-> 这样就引用啦
->> 多次引用
->>>>>>> 08ba88a3473131293f4d931a3136dfb6e3850a17
-*一个星是斜体*
-**两个星是粗体**
----------
+[google us](http://google.us/).
+
+ > This is a block quote.
+ >
+ >> Second level
+ > > > gong
+ > back to first level
+
+*一个星是斜体*,
+**两个星是粗体**,
+___________,
+*********
 分割线
-<<<<<<< HEAD
 $$
 \begin{equation}
-x^2=3
+x^2=3.
 \end{equation}
 $$
 参考方式定义链接:
 I get 10 times more traffic from [Google] [1] than from
 [Yahoo] [2] or [MSN] [3].
-=======
-
-$x^2=3$
-
-参考方式定义链接:
-I get 10 times more traffic from [Google] [1] than from
-[Yahoo] [2] or [MSN] [3]. 可以在要输入的代码前加tab来表示code输入.
->>>>>>> 08ba88a3473131293f4d931a3136dfb6e3850a17
 
 	#include<stdio.h>
 	int main()
@@ -65,39 +41,25 @@ I get 10 times more traffic from [Google] [1] than from
 	     return 0;
 	}
 也可以使用
-<<<<<<< HEAD
-{% highlight c %}
-=======
 {% highlight objc %}
->>>>>>> 08ba88a3473131293f4d931a3136dfb6e3850a17
+% highlight objc %
 #include<stdio.h>
 int main(){
 	printf("hello Markdown");
 	return 0;
 }
+% endhighlight %
 {% endhighlight %}
-
-<<<<<<< HEAD
-还可以使用
-{% highlight objc %}
-#include<stdio.h>
-int main(){
-	printf("hello Markdown");
-	return 0;
-}
-{% endhighlight %}
-=======
-其中用
-
+其中
 {% highlight objc %}
 % highlight objc %
 code here 
 % endhighlight %
 {% endhighlight %}
-用{}将% highlight objec%括起来, highlight也一样.
+用{}将% highlight objc%括起来.
 
 
-### 在emacs使用pandoc并编译数学公式
+### 2.在emacs使用pandoc并编译数学公式
 - 安装emacs.
 ubuntu 下非常简单.顺手装好ess.
 {% highlight objc %}
@@ -120,7 +82,7 @@ pandoc -s doc.md -o report.html --mathjax
 
 
 
->>>>>>> 08ba88a3473131293f4d931a3136dfb6e3850a17
+
   [1]: http://google.com/        "Google"
   [2]: http://search.yahoo.com/  "Yahoo Search"
   [3]: http://search.msn.com/    "MSN Search"
