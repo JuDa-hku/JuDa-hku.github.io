@@ -1,0 +1,12 @@
+
+
+    　　---
+    　　layout: default
+    　　title: hello,I learn statistics
+    　　---
+
+    　　<h2>{{ page.title }}</h2>
+
+    　　<p>Have a try</p>
+
+    　　<p>{{ page.date | date_to_string }}</p>
