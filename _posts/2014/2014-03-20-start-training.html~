@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>For the try</title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<div id="header">
+<h1 class="title">For the try</h1>
+</div>
+<p>*介绍</p>
+<hr />
+<h3 id="introducation">1.introducation</h3>
+<a href="http://google.us/">google us</a> &gt;这样就引用啦 <em>一个星是斜体</em> <strong>两个星是粗体</strong> --------- 分割线
+
+<p>参考方式定义链接: I get 10 times more traffic from [Google] [1] than from [Yahoo] [2] or [MSN] [3].</p>
+<pre><code>#include&lt;stdio.h&gt;
+int main()
+{    printf(&quot;hello Markdown&quot;);
+     return 0;
+}</code></pre>
+<p>也可以使用 {% highlight c %} #include<stdio.h> int main(){ printf(&quot;hello Markdown&quot;); return 0; } {% endhighlight %}</p>
+<p>还可以使用 {% highlight objc %} #include<stdio.h> int main(){ printf(&quot;hello Markdown&quot;); return 0; } {% endhighlight %} [1]: http://google.com/ &quot;Google&quot; [2]: http://search.yahoo.com/ &quot;Yahoo Search&quot; [3]: http://search.msn.com/ &quot;MSN Search&quot;</p>
+</body>
+</html>
