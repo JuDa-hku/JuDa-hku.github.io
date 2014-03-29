@@ -13,6 +13,7 @@ tags:
 * Predefined Pointer-Related Types
 * Multiple Levels of Indirection
 * Constants and Pointers
+* Dynamic Memory Allocation
 
 ---
 
@@ -148,6 +149,39 @@ const int * const * pcpci=&cpci
 // A pointer to a constant pointer to a constant
 {% endhighlight %}
 
+## Dynamic Memory Allocation
+The basic steps used for dynamic memory allocation in C are:
+
+- Use a malloc type function to allocate memory
+- Use this memory to support the application
+- Deallocate the memory using the free function
+
+{% highlight objc %}
+int *pi=(int*) malloc(sizeof(int))
+*pi=5
+printf("*pi: %d\n",*pi)
+free(pi)
+{% endhighlight %}
+Each time the malloc function (or similar function) is called, a corresponding call to the free function must be made when the application is done with the memory to avoid memory leaks.
+{% highlight objc %}
+char *chunk
+while(1){
+chunk=(char*) malloc(10000);
+printf("Allocating\n");
+}
+{% endhighlight %}
+Losing the address example
+{% highlight objc %}
+int *pi=(int*) malloc(sizeof(int))
+*pi=5
+pi=(int*) malloc(sizeof(int))
+{% endhighlight %}
+Dynamic memory allocation functions.
+
+- malloc Allocates memory from the heap
+- realloc Reallocates memory to a larger or smaller amount based on a previously allocated block of memory
+- calloc Allocates and zeros out memory from the heap
+- free Returns a block of memory to the heap
 
 
 
