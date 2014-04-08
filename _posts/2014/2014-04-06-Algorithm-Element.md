@@ -8,6 +8,7 @@ tags:
 - Algorithm
 
 ---
+* InsertSort
 * BucketSort
 * Bubble Sort
 * Quick Sort
@@ -15,6 +16,53 @@ tags:
 * Dijkstra Algorithm
 
 ---
+
+## InsertSort
+Use the mathmatic inducation method to analysis the algorithm. To insert the value to the sorted sequence, we need to find the first number that is smaller or bigger than the given one. Then move the part of the array from the found number to the end back one. At last, we insert the number into this position.
+{% highlight objc %}
+#include<stdio.h>
+int a[100],n;
+void Initialize(void)
+{
+  printf("input the number of element: ");
+  scanf("%d",&n);
+  printf("Input the whole with %d numbers:", n);
+  for(int i=0;i<n;i++)
+    {
+      scanf("%d",&a[i]);
+    }
+}
+
+void InsertSort(void)
+{
+  int tmp;
+  for (int i = 1; i < n; ++i)
+    {
+      tmp=a[i];
+      while(a[i-1]>tmp&&i>=0)
+	{
+	  a[i]=a[i-1];
+	  i--;
+	}
+      a[i]=tmp;
+    }
+}
+
+void output(void)
+{
+  for (int i = 0; i < n; ++i)
+    {
+      printf("%d ",a[i]);
+    }
+}
+
+int main()
+{
+  Initialize();
+  InsertSort();
+  output();
+}
+{% endhighlight %}
 
 ## BucketSort
 {% highlight objc %}

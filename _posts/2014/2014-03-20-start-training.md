@@ -4,8 +4,9 @@ title: About markdown and math formula in pandoc
 categories:
 - Programming
 tags:
-- C
+- markdown
 - Algorithm
+
 ---
 * 介绍
 * 在emacs使用pandoc并编译数学公式

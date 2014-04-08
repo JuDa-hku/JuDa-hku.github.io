@@ -5,7 +5,8 @@ categories:
 - Programming
 tags:
 - C
-- Algorithm
+- ADT
+
 ---
 * List 
 * Stack
