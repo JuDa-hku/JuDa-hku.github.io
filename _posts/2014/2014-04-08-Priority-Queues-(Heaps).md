@@ -18,7 +18,7 @@ Although jobs sent to a printer are generally placed on a queue, this might not 
 
 ## Binary Heap
 The implementation we will use is known as a *binary heap*. Its use is so common for priority queue implementations that when the word heap is used without a qualifier, it is generally assumed to be referring to this. A heap is a binary tree that is **completely filled**, with the possible exception of the bottom level, which is filled from left to right. A complete binary tree of height h has between 2^h and 2^(h+1)-1 nodes. The property that allows operations to be performed quickly is the *heap order* property. For every node X, the key in the parent of X is smaller than the key in X.
-{% hightlight objc %}
+{% highlight objc %}
 #ifndef _BinHeap_H
 
 struct HeapStruct;
@@ -34,7 +34,7 @@ int IsEmpty(PriorityQueue H);
 int IsFull(PriorityQueue H);
 
 #endif
-{% endhighlight objc}
+{% endhighlight %}
 The implementation file for *initializing*
 {% highlight objc %}
 struct HeapStruct
@@ -133,7 +133,7 @@ PriorityQueue Insert1(ElementType X,PriorityQueue H);
 PriorityQueue DeleteMin1(PriorityQueue H);
 
 #endif
-{% endhighlight}
+{% endhighlight %}
 The .c file is attached below:
 {% highlight objc %}
 struct TreeNode
