@@ -1,6 +1,6 @@
 ---
 layout: post
-title: MakeFile and Standard C Lib 0
+title: MakeFile and Standard C Lib 
 categories:
 - Programming
 tags:
@@ -10,10 +10,11 @@ tags:
 ---
 * MakeFile
 * Assert Lib
+* Ctype Lib
 
 ---
 
-Basically, this series are reading notes and ideas from the book [**The Standard C Library**](http://www.amazon.com/The-Standard-Library-P-J-Plauger/dp/0131315099) and [wiki](http://en.wikipedia.org/wiki/C_standard_library) .
+Basically, the book [**The Standard C Library**](http://www.amazon.com/The-Standard-Library-P-J-Plauger/dp/0131315099) and [wiki](http://en.wikipedia.org/wiki/C_standard_library) introduce the standard C lib and how to implement these standard libs. Here I choose to two libs as examples to introduce. We can use the same way to test the code in the book.
 
 ## MakeFile
 If we want to compile lots of files at the same time. To link them one by one is not a good idea, especially when we update some of them and the relationship between is complex. To write a **makefile** for the whole project is a good idea. A simple makefile is given below.
@@ -58,3 +59,16 @@ tassert.o:tassert.c assert.h
 clean:
 	rm  tassert.o xassert.o tassert
 {% endhighlight %}
+
+## Ctype.h
+Character handling has been important since the earliest days of C. In the ASCII character set the following test identifies a letter:
+
+	if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
+	
+However, this does not work for other character sets such as *EBCDIC*. Also, programmers may write this kind of code serveral times, which slows comprehension and increases the chance for errors so it is replaced by the functions in <ctype.h>.
+
+Unlike the above example, the character classification routines are not written as comparison tests. In most C libraries, they are written as static table lookups instead of macros or functions. If we use the below method:
+
+	#define isdigit(x) ((x) >= '0' && (x) <= '9')
+	
+Obviously, when we use **isdigit(SomeProgram(x))**, the program will run twice.
