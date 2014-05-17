@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title: Computer Configuration and Website
@@ -53,6 +54,16 @@ Then put file in these place
 	/usr/local/share/texmf/tex/latex/*.sty
 	/usr/local/share/texmf/fonts/source/oesch/*.mf
 
+Use python for machine learning study.
+
+	git clone git://github.com/numpy/numpy.git numpy
+	git clone git://github.com/scipy/scipy.git scipy
+	git clone git://github.com/scikit-learn/scikit-learn.git
+	sudo python setup.py build
+	sudo python setup.py install
+	apt-get install python-numpy python-scipy
+	
+Check the wesite for dependence packages, especially libatlas-dev and libatlas3gf-base.
 
 ## Website
 [Find data in quandl](http://quandl.com)
