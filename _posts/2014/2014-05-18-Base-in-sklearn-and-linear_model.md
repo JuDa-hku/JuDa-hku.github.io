@@ -129,6 +129,27 @@ return x+1
 func(func1)
 {% endhighlight objc %}
 
+why we need .copy()? Assignment statements in Python do not copy objects, they create bindings between a target and an object. For collections that are mutable or contain mutable items, a copy is needed so one can change one copy without changing the other.
+
+collections provides high performance containers. [from collections import defaultdict](https://docs.python.org/2/library/collections.html?highlight=defaultdict#collections.defaultdict), *defaultdict* object is a new dictionary-like object.
+{% highlight objc %}
+ s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
+ d = defaultdict(list)
+ for k, v in s:
+     d[k].append(v)
+ d.items()
+[('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
+{% endhighlight objc %}
+Setting the default_factory to int makes the defaultdict useful for counting.
+{% highlight objc %}
+s='mississippi'
+d=default(int)
+for k in s:
+	d[k]+=1
+d.items()	
+{% endhighlight objc %}
+
+
 ## sklearn/base.py
 **clone(estimator, safe=True)** constructs a new estimator with the same
 parameters and yields a new estimator with the same parameters that
