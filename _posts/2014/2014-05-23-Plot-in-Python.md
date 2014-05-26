@@ -24,9 +24,9 @@ tags:
 ---
 
 ## matplotlib
+There are a lot of plot in matplotlib gallary[http://matplotlib.org/gallery.html](http://matplotlib.org/gallery.html).
 The most important part is to tell the connections between classes, for example class axes, class axis, class fig.
-[tutorial](http://www.loria.fr/~rougier/teaching/matplotlib/#contour-plots)
-Notes on some common used function in matplotlib. 
+[Tutorial](http://www.loria.fr/~rougier/teaching/matplotlib/#contour-plots) Notes on some common used function in matplotlib. 
 {% highlight objc %}
 from matplotlib import pyplot as plt
 ##same as import pylab as plt
@@ -300,7 +300,7 @@ pl.show()
 {% endhighlight objc %}
 
 ## matplotlib logo design
-The logo are composed by the background text, the bar plot and the text "matplotlib". Plot each part one by one.
+The logo are composed by the background text, the bar plot and the text "matplotlib". Plot each part one by one. we need **transform = ax.tranAxes** ax.tranAxes is the coordinate system of the display.
 {% highlight objc %}
 # from Tony Yu  logo design for matplotlib
 from matplotlib import pyplot as plt
