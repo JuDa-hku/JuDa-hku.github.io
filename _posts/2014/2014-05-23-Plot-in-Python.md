@@ -148,11 +148,11 @@ pl.xticks([])
 pl.ylim(-1.25,+1.25)
 pl.yticks([])
 pl.show()
-{% endhighlight object %}
+{% endhighlight objc %}
 
 ## contour and savefig
 Refer [here](http://matplotlib.org/examples/color/colormaps_reference.html) for more color_maps.
-{%highlight object %}
+{%highlight objc%}
 import pylab as pl
 import numpy as np
 
@@ -169,10 +169,10 @@ pl.C = pl.contour(X, Y, f(X,Y), 8, colors='black', linewidth=.5)
 pl.clabel(pl.C, fontsize=10, inline=1)
 pl.savefig('./contour.png')
 pl.show()
-{% endhighlight object %}
+{% endhighlight objc %}
 
 ## imshow with colorbar()
-{% highlight objct %}
+{% highlight objc %}
 import pylab as pl
 def f(x,y):
     return (1-x/2+x**5+y**3)*np.exp(-x**2-y**2)
@@ -186,10 +186,10 @@ pl.imshow(f(X,Y), cmap='bone', interpolation='nearest', origin='lower')
 ##interpolation has many choice and will show in ps, or pdf.
 pl.colorbar()
 pl.show()
-{% endhighlight object %}
+{% endhighlight objc %}
 
 ## pie
-{% highlight object %}
+{% highlight objc %}
 from matplotlib import pyplot as pl
 import numpy as np
 n = 3
@@ -207,13 +207,13 @@ pl.pie(Z,colors=colors, explode=[0,0,0.2], labels=('man','woman','not known'), a
 # label add name
 pl.gca().set_aspect('equal')
 pl.show()
-{% endhighlight object %}
+{% endhighlight objc %}
 *gca()* return the current axes, creating one if necessary.
 By *set_aspect('equal')* figure and axes are euqal, the pie chart look best .
 **axes(aspect=1)** is the easiest way.
 
 ##grid
-{% highlight object %}
+{% highlight objc %}
 import pylab as pl
 ax = pl.axes([0.025, 0.025, 0.95, 0.95])
 ##axis classes for the ticks and x and y axis
@@ -232,10 +232,10 @@ ax.grid(which='minor', axis='y', linewidth=0.25, linestyle='-', color='0.75')
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 pl.show()
-{% endhighlight object%}
+{% endhighlight objc%}
 
 ## Multi plots
-{% highlight object %}
+{% highlight objc %}
 import pylab as pl
 fig = pl.figure()
 fig.subplots_adjust(bottom=0.025, left=0.025, top=0.975, right=0.975)
@@ -253,10 +253,10 @@ pl.subplot(2,3,6)
 pl.xticks([])
 pl.yticks([])
 pl.show()
-{% endhighlight object %}
+{% endhighlight objc %}
 
 ## polar axis with subplots
-{% highlight object %}
+{% highlight objc %}
 import pylab as pl
 import numpy as np
 #ax = pl.axes([0,0,1,1], polar=True)
@@ -277,18 +277,10 @@ for r,bar in zip(radii, bars):
     bar.set_facecolor(pl.cm.jet(r/10))
     bar.set_alpha(0.5)
 pl.show()
-
-
-
-
-
-{% endhighlight object}
-
-
-
-
+{% endhighlight objc %}
 
 ## 3d plot
+{% highlight objc %}
 import pylab as pl
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
@@ -305,53 +297,43 @@ ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='hot')
 ax.contourf(X, Y, Z, zdir='z', offset=-2,cmap=cm.hot)
 ax.set_zlim(-2,2)
 pl.show()
-
+{% endhighlight objc %}
 
 ## matplotlib logo design
 The logo are composed by the background text, the bar plot and the text "matplotlib". Plot each part one by one.
-{% highlight object %}
+{% highlight objc %}
 # from Tony Yu  logo design for matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
 import matplotlib as mpl
 import matplotlib.cm as cm
-
 mpl.rcParams['xtick.labelsize'] = 10
 mpl.rcParams['ytick.labelsize'] = 12
 mpl.rcParams['axes.edgecolor'] = 'gray'
-
 axalpha = 0.05
 figcolor = 'white'
 dpi = 80
 fig = plt.figure(figsize=(6, 1.1),dpi=dpi)
 fig.figurePatch.set_edgecolor(figcolor)
 fig.figurePatch.set_facecolor(figcolor)
-
 def add_math_background():
     ax = fig.add_axes([0, 0, 1, 1])
-
     text = []
     text.append((r"$W^{3\beta}_{\delta_1 \rho_1 \sigma_2} = U^{3\beta}_{\delta_1 \rho_1} + \frac{1}{8 \pi 2} \int^{\alpha_2}_{\alpha_2} d \alpha^\prime_2 \left[\frac{ U^{2\beta}_{\delta_1 \rho_1} - \alpha^\prime_2U^{1\beta}_{\rho_1 \sigma_2} }{U^{0\beta}_{\rho_1 \sigma_2}}\right]$", (0.7, 0.2), 20))
     text.append((r"$\frac{d\rho}{d t} + \rho \vec{v}\cdot\nabla\vec{v} = -\nabla p + \mu\nabla^2 \vec{v} + \rho \vec{g}$",
                 (0.35, 0.9), 20))
-    text.append((r"$\int_{-\infty}^\infty e^{-x^2}dx=\sqrt{\pi}$",
-                (0.15, 0.3), 25))
-    #text.append((r"$E = mc^2 = \sqrt{{m_0}^2c^4 + p^2c^2}$",
-    #            (0.7, 0.42), 30))
+    text.append((r"$\int_{-\infty}^\infty e^{-x^2}dx=\sqrt{\pi}$",(0.15, 0.3), 25))
     text.append((r"$F_G = G\frac{m_1m_2}{r^2}$",
                 (0.85, 0.7), 30))
     for eq, (x, y), size in text:
         ax.text(x, y, eq, ha='center', va='center', color="#11557c", alpha=0.25, transform=ax.transAxes, fontsize=size)
     ax.set_axis_off()
     return ax
-
 def add_matplotlib_text(ax):
     ax.text(0.95, 0.5, 'matplotlib', color='#11557c', fontsize=65,
     ha='right', va='center', alpha=1.0, transform=ax.transAxes)
-
 def add_polar_bar():
     ax = fig.add_axes([0.025, 0.075, 0.2, 0.85], polar=True)
-
     ax.axesPatch.set_alpha(axalpha)
     ax.set_axisbelow(True)
     N = 7
@@ -365,18 +347,13 @@ def add_polar_bar():
         bar.set_alpha(0.6)
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_visible(False)
-        
-
     for line in ax.get_ygridlines() + ax.get_xgridlines():
         line.set_lw(0.8)
         line.set_alpha(0.9)
         line.set_ls('-')
         line.set_color('0.5')
-
-
         ax.set_yticks(np.arange(1, 9 ,2))
         ax.set_rmax(9)
-
 if __name__ == '__main__':
     main_axes = add_math_background()
     add_polar_bar()
@@ -384,9 +361,7 @@ if __name__ == '__main__':
     print("main")
     plt.savefig("./try.png")
     plt.show()
-{% endhighlight object %}
-
-
+{% endhighlight objc %}
 
 
 
