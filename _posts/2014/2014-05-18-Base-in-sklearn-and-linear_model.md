@@ -149,6 +149,9 @@ for k in s:
 d.items()	
 {% endhighlight objc %}
 
+Why run the code **import os**, **print os.path.realpath(__file__)** directly does not work?
+
+You can't directly determine the location of the main script being executed. After all, sometimes the script didn't come from a file at all. For example, it could come from the interactive interpreter or dynamically generated code stored only in memory. However, you can reliably determine the location of a module, since modules are always loaded from a file. If you create a module with the following code and put it in the same directory as your main script, then the main script can import the module and use that to locate itself.
 
 ## sklearn/base.py
 **clone(estimator, safe=True)** constructs a new estimator with the same
