@@ -104,6 +104,7 @@ pl.ylim(-2.5,2.5)
 pl.yticks([])
 pl.show()
 {% endhighlight objc %}
+![Fill_area](/png/fill_between.png?raw=true)
 
 ## scatter and color vector
 {% highlight objc %}
