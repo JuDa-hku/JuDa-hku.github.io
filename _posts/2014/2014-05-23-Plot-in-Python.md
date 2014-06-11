@@ -24,7 +24,7 @@ tags:
 ---
 
 ## matplotlib
-There are a lot of plot in matplotlib gallary[http://matplotlib.org/gallery.html](http://matplotlib.org/gallery.html).
+There are a lot of plot in matplotlib gallary [http://matplotlib.org/gallery.html](http://matplotlib.org/gallery.html).
 The most important part is to tell the connections between classes, for example class axes, class axis, class fig.
 [Tutorial](http://www.loria.fr/~rougier/teaching/matplotlib/#contour-plots) Notes on some common used function in matplotlib. 
 {% highlight objc %}
@@ -91,6 +91,7 @@ import pylab as pl
 n = 256
 X = np.linspace(-np.pi, np.pi, n, endpoint=True)
 Y = np.sin(2*X)
+pl.figure(figsize=(5,4))
 pl.axes([0.025, 0.025, 0.95, 0.95])
 pl.plot(X, Y+1, c='b', alpha=0.5)
 pl.fill_between(X, 1, Y+1, Y<0, color='blue', alpha=0.25)
@@ -102,7 +103,7 @@ pl.xlim(-np.pi, np.pi)
 pl.xticks([])
 pl.ylim(-2.5,2.5)
 pl.yticks([])
-pl.show()
+pl.savefig('fill_between.png')
 {% endhighlight objc %}
 ![Fill_area](/png/fill_between.png?raw=true)
 
@@ -114,7 +115,8 @@ n = 1024
 X = np.random.normal(0,1,n)
 Y = np.random.normal(0,1,n)
 T = np.arctan2(Y,X)
-##set the color vector 
+##set the color vector
+pl.figure(figsize=(5,4))
 pl.axes([0.025, 0.025, 0.95, 0.95])
 # axes(rect, axisbg='w') rect=[left, bottom, width, height]
 #in normalized(0,1) units. axisbg is the background color default white
@@ -123,8 +125,9 @@ pl.xlim((-1.5, 1.5))
 pl.ylim(-1.5, 1.5)
 pl.xticks([])
 pl.yticks([])
-pl.show()
+pl.savefig('scatter.png')
 {% endhighlight %}
+![scatter](/png/scatter.png?raw=true)
 
 ## bar plot and add text
 {% highlight objc %}
@@ -134,7 +137,7 @@ n = 12
 X = np.arange(n)
 Y1 = (1-X/float(n)) * np.random.uniform(0.5,1.0,n)
 Y2 = (1-X/float(n)) * np.random.uniform(0.5,1.0,n)
-
+pl.figure(figsize=(5,4))
 pl.bar(X, +Y1, facecolor='b', edgecolor='white')
 pl.bar(X, -Y2, facecolor='pink', edgecolor='white')
 
@@ -148,8 +151,9 @@ pl.xlim（-0.5,n)
 pl.xticks([])
 pl.ylim(-1.25,+1.25)
 pl.yticks([])
-pl.show()
+pl.savefig('bar_plot_with_text.png')
 {% endhighlight objc %}
+![bar](/png/bar_plot_with_text.png?raw=true)
 
 ## contour and savefig
 Refer [here](http://matplotlib.org/examples/color/colormaps_reference.html) for more color_maps.
@@ -163,14 +167,14 @@ n = 256
 x = np.linspace(-3,3,n)
 y = np.linspace(-3,3,n)
 X,Y = np.meshgrid(x,y)
-
+pl.figure(figsize=(5,4))
 pl.contourf(X, Y, f(X,Y), 8, alpha=.75, cmap=pl.cm.hot)
 
 pl.C = pl.contour(X, Y, f(X,Y), 8, colors='black', linewidth=.5)
 pl.clabel(pl.C, fontsize=10, inline=1)
-pl.savefig('./contour.png')
-pl.show()
+pl.savefig('contour.png')
 {% endhighlight objc %}
+![contour](/png/contour.png?raw=true)
 
 ## imshow with colorbar()
 {% highlight objc %}
@@ -182,12 +186,14 @@ n = 10
 x = np.linspace(-3,3,4*n)
 y = np.linspace(-3,3,3*n)
 X,Y = np.meshgrid(x,y)
+pl.figure(figsize=(5,4))
 pl.imshow(f(X,Y), cmap='bone', interpolation='nearest', origin='lower')
 ##origin set the [0,0] index of the array to upper left or lower left
 ##interpolation has many choice and will show in ps, or pdf.
 pl.colorbar()
-pl.show()
+pl.savefig('imshow.png')
 {% endhighlight objc %}
+![imshow](/png/imshow.png?raw=true)
 
 ## pie
 {% highlight objc %}
@@ -200,6 +206,7 @@ Z[-1] = 0.2
 #figure(figsize=(8,8))
 #ax = axes([0.1, 0.1, 0.8, 0.8])
 # or axes(aspect='equal')
+pl.figure(figsize=(6,4))
 pl.axes([0.025, 0.025, 0.95, 0.95])
 colors = ['0.5',' 0.5', '0.5']
 pl.pie(Z,colors=colors, explode=[0,0,0.2], labels=('man','woman','not known'), autopct='%1.1f%%')
@@ -207,15 +214,17 @@ pl.pie(Z,colors=colors, explode=[0,0,0.2], labels=('man','woman','not known'), a
 # autopct add the percent of each piece
 # label add name
 pl.gca().set_aspect('equal')
-pl.show()
+pl.save('pie.png')
 {% endhighlight objc %}
 *gca()* return the current axes, creating one if necessary.
 By *set_aspect('equal')* figure and axes are euqal, the pie chart look best .
 **axes(aspect=1)** is the easiest way.
+![pie](/png/pie.png?raw=true)
 
 ##grid
 {% highlight objc %}
 import pylab as pl
+pl.figure(figsize=(6,4))
 ax = pl.axes([0.025, 0.025, 0.95, 0.95])
 ##axis classes for the ticks and x and y axis
 ax.set_xlim(0,4)
@@ -232,13 +241,14 @@ ax.grid(which='major', axis='y', linewidth=0.75, linestyle='-', color='0.75')
 ax.grid(which='minor', axis='y', linewidth=0.25, linestyle='-', color='0.75')
 ax.set_xticklabels([])
 ax.set_yticklabels([])
-pl.show()
+pl.savefig('grid.png')
 {% endhighlight objc%}
+![grid.png](/png/grid.png?raw=true)
 
 ## Multi plots
 {% highlight objc %}
 import pylab as pl
-fig = pl.figure()
+fig = pl.figure(figsize=(6,4))
 fig.subplots_adjust(bottom=0.025, left=0.025, top=0.975, right=0.975)
 ## in the class figure
 pl.subplot(2,1,1)
@@ -253,13 +263,15 @@ pl.yticks([])
 pl.subplot(2,3,6)
 pl.xticks([])
 pl.yticks([])
-pl.show()
+pl.savefig('Multi_plots.png')
 {% endhighlight objc %}
+![Multi_plots](/png/Multi_plots.png?raw=true)
 
 ## polar axis with subplots
 {% highlight objc %}
 import pylab as pl
 import numpy as np
+pl.figure(figsize=(6,4))
 #ax = pl.axes([0,0,1,1], polar=True)
 ax = pl.subplot(2,2,2, polar=True)
 N=20
@@ -277,8 +289,9 @@ bars = pl.bar(theta, radii, width=width, bottom=0.0)
 for r,bar in zip(radii, bars):
     bar.set_facecolor(pl.cm.jet(r/10))
     bar.set_alpha(0.5)
-pl.show()
+pl.savefig('ploar_axis.png')
 {% endhighlight objc %}
+![ploar_axis](/png/ploar_axis.png?raw=true)
 
 ## 3d plot
 {% highlight objc %}
@@ -286,7 +299,7 @@ import pylab as pl
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
-fig = pl.figure()
+fig = pl.figure(figsize=(6,4))
 ax = Axes3D(fig)
 X = np.arange(-4, 4, 0.25)
 Y = np.arange(-4, 4, 0.25)
@@ -297,8 +310,9 @@ Z = np.sin(R)
 ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='hot')
 ax.contourf(X, Y, Z, zdir='z', offset=-2,cmap=cm.hot)
 ax.set_zlim(-2,2)
-pl.show()
+pl.savefig('3dplot.png')
 {% endhighlight objc %}
+![3dplot](/png/3dplot.png?raw=true)
 
 ## matplotlib logo design
 The logo are composed by the background text, the bar plot and the text "matplotlib". Plot each part one by one. we need **transform = ax.tranAxes** ax.tranAxes is the coordinate system of the display.
@@ -360,9 +374,9 @@ if __name__ == '__main__':
     add_polar_bar()
     add_matplotlib_text(main_axes)
     print("main")
-    plt.savefig("./try.png")
-    plt.show()
+    plt.savefig("./matplot_log.png")
 {% endhighlight objc %}
+![matplot_log](/png/matplot_log.png?raw=true)
 
 
 
