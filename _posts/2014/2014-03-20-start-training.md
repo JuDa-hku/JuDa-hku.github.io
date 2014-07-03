@@ -4,7 +4,7 @@ title: About markdown and math formula in pandoc
 categories:
 - Programming
 tags:
-- markdown
+- Markdown
 - Algorithm
 
 ---

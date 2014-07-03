@@ -5,7 +5,7 @@ categories:
 - Programming
 tags:
 - Python
-- matplotlib
+- Matplotlib
 
 ---
 * matplotlib

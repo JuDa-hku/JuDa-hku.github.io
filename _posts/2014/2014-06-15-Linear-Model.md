@@ -2,10 +2,10 @@
 layout: post
 title: Linear Model
 categories:
-- machine learning
+- Machine Learning
 tags:
 - Algorithm
-- scikit
+- Scikit
 
 ---
 * Ridge Regression

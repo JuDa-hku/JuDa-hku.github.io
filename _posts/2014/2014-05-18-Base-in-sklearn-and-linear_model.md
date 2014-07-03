@@ -6,7 +6,7 @@ categories:
 tags:
 - Python
 - Algorithm
-- Sklearn
+- Scikit
 
 ---
 * Python tips

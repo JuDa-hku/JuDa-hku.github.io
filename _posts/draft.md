@@ -3,9 +3,15 @@ layout: post
 title: 
 categories:
 - Programming
+- Machine Learning
+- Tools
 tags:
-- C
+- Markdown
 - Algorithm
+- C
+- Scikit
+- Python
+
 ---
 * section1
 * section2
