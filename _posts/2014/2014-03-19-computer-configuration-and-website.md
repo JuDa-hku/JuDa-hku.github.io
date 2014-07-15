@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: Computer Configuration and Website
@@ -66,6 +65,7 @@ Use python for machine learning study.
 Check the wesite for dependence packages, especially libatlas-dev and libatlas3gf-base.
 
 [jedi.el](http://tkf.github.io/emacs-jedi/latest/) provides a fantastic way to auto complete python code and I can get doc using C-c ?.
+
 ## Website
 [Find data in quandl](http://quandl.com)
 
