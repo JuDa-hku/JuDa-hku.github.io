@@ -25,6 +25,23 @@ In mac, the path is not easy to set
 (when window-system (cd "~/Desktop/"))
 {%endhighlight objc %}
 
+To install package, we can choose the **macport** package system to simplify our installation. (the flyspell script)(http://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell.html) can be used to check word spelling when typing. And set different kinds of checking method below.
+
+{%highlight objc %}
+;; Use aspell for spell checking: brew install aspell --lang=en
+(setq ispell-program-name "/opt/local/bin/aspell")
+(setq ispell-program-name "/opt/local/bin/aspell")
+(setq-default major-mode 'text-mode)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
+(autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
+(autoload 'tex-mode-flyspell-verify "flyspell" "" t) 
+;;the last three function come from the script.
+{%endhighlight objc %}
+
+In emacs use **aspell** for word check, 
 Update 2014-08-16 For emacs24, it provide the package and can be installed pretty easy. But the gs is hard to set in the os x. **PDF2DSC sentinel: Searching for program: No such file or directory, gs** , to solve the problem, set **.emacs Evaluate (setq preview-gs-options '("-q" "-dNOSAFER" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")), tailoring to your setup. The important bit is changing "-dSAFER" to "-dNOSAFER"** through gui. In osx we need to install maxtex first.
 
 I use [auctex](https://www.gnu.org/software/auctex/download-for-unix.html) in emacs for pdf and evince for preview. We can install the texlive-full first which is about 2GB and include nearly all packages.
