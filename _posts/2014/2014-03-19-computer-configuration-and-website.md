@@ -13,17 +13,28 @@ tags:
 ---
 
 ## Computer Configuration
-I use [auctex](https://www.gnu.org/software/auctex/download-for-unix.html) in emacs for pdf and evince for preview.
-{% highlight objc %}
-(setq TeX-PDF-mode t)
-(defun pdfevince ()
-   (add-to-list 'TeX-output-view-style
-                 '("^pdf$" "." "evince %o %(outpage)")))
-(add-hook  'LaTeX-mode-hook  'pdfevince  t) ; AUCTeX LaTeX mode
-{% endhighlight %}
+
+In mac, the path is not easy to set
+{%highlight objc %}
+;;set up the path for the window-system
+(defun set-exec-path-from-shell-PATH ()
+    (let ((path-from-shell (shell-command-to-string "$SHELL -c 'echo $PATH'")))
+      (setenv "PATH" path-from-shell)
+      (setq exec-path (split-string path-from-shell path-separator))))
+(when window-system (set-exec-path-from-shell-PATH))
+(when window-system (cd "~/Desktop/"))
+{%endhighlight objc %}
+
+Update 2014-08-16 For emacs24, it provide the package and can be installed pretty easy. But the gs is hard to set in the os x. **PDF2DSC sentinel: Searching for program: No such file or directory, gs** , to solve the problem, set **.emacs Evaluate (setq preview-gs-options '("-q" "-dNOSAFER" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")), tailoring to your setup. The important bit is changing "-dSAFER" to "-dNOSAFER"** through gui. In osx we need to install maxtex first.
+
+I use [auctex](https://www.gnu.org/software/auctex/download-for-unix.html) in emacs for pdf and evince for preview. We can install the texlive-full first which is about 2GB and include nearly all packages.
+
+
 
 I use [Ess](http://ess.r-project.org/index.php?Section=download) to run R code in emacs. Download from the link or install it directly through package.
 	sudo apt-get install  ess
+In mac, the ess have to be copied to .emacs.d and config.
+
 
 Use [imaxima](https://sites.google.com/site/imaximaimath/download-and-install/easy-install-on-linux) for symbolic computation. It can even typeset the result of any calculation. [A short ref-card](http://hippasus.com/resources/symmath/maximacalc.html).
 	factor(x^2+2*x+1);
