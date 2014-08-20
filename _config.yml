@@ -2,5 +2,5 @@ markdown: kramdown
 permalink: /:year/:month/:title/
 url: http://juda-hku.github.io
 author: 鞠达
-pygments: true
+highlighter: true
 paginate: 24
