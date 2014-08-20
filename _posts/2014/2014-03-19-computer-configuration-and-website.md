@@ -25,7 +25,7 @@ In mac, the path is not easy to set
 (when window-system (cd "~/Desktop/"))
 {%endhighlight objc %}
 
-To install package, we can choose the **macport** package system to simplify our installation. (the flyspell script)(http://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell.html) can be used to check word spelling when typing. And set different kinds of checking method below.
+To install package, we can choose the **macport** package system to simplify our installation. [the flyspell script](http://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell.html) can be used to check word spelling when typing. And set different kinds of checking method below.
 
 {%highlight objc %}
 ;; Use aspell for spell checking: brew install aspell --lang=en
