@@ -37,7 +37,8 @@ To install package, we can choose the **macport** package system to simplify our
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
 (autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
-(autoload 'tex-mode-flyspell-verify "flyspell" "" t) 
+(autoload 'tex-mode-flyspell-verify "flyspell" "" t)
+(ispell-change-dictionary "american" t)
 ;;the last three function come from the script.
 {%endhighlight objc %}
 
