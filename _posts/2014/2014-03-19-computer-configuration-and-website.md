@@ -69,7 +69,7 @@ When visiting the saved file, if you place:
 ;; -*- mode: imath -*-
 in the first line of the file, GNU Emacs automatically determines that the buffer needs imath mode, and enables it.
 
-Use [Osterreichische Schulschrift](http://www.tug.dk/FontCatalogue/oesch/) and [Calligra](http://www.tug.dk/FontCatalogue/calligra/) for beatiful fonts. Calligra can be using directly by \uspackage{calligra} and {\calligra people come and go} after installing  texlive-fonts-extra package. Oesch is a little bit difficult to use. First find the texmf.cnf through
+Use[Lobster2](http://www.tug.dk/FontCatalogue/lobster2/), [Osterreichische Schulschrift](http://www.tug.dk/FontCatalogue/oesch/) and [Calligra](http://www.tug.dk/FontCatalogue/calligra/) for beautiful fonts, lobster2 is included in texlive and can be used directly . Calligra can be using directly by \uspackage{calligra} and {\calligra people come and go} after installing  texlive-fonts-extra package. Oesch is a little bit difficult to use. First find the texmf.cnf through
 
 	sudo find / -type f -name "texmf.cnf"
 	
