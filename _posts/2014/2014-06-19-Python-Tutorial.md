@@ -14,6 +14,8 @@ tags:
 * Iterators and Generators
 
 ---
+Website for Python learning (look at them often). [Code Like a Pythonista](http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html), [Code Style](http://docs.python-guide.org/en/latest/writing/style/) 
+<!--  -->
 
 ## Mutable or Immutable
 - Unlike a C string, Python strings cannot be changed. Assigning to an indexed position in the string results in an error.
