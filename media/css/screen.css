@@ -76,14 +76,14 @@ body>div {
     -moz-box-shadow: 0 0 10px 0 #cfcfcf;
     -webkit-box-shadow: 0 0 10px 0 #cfcfcf;
     box-shadow: 0 0 10px 0 #cfcfcf;
-    border-top: 6px solid #EE0000;
+    border-top: 6px solid #91cae1; /* #EE0000; */
 }
 h1 {
     font-size: 28px;
     line-height: 28px;
     margin: 0 0 28px 0;
-	background-color: #000;
-	color: #fff;
+	background-color: #fff;
+	color: #3182bd;
 	display: inline-block;
 	padding: 12px;
 }
@@ -143,10 +143,12 @@ hr {
     margin: 0 0 22px 0;
 }
 a {
-    color: #EE0000;
+    color: #3182bd;
+    /*color: #EE0000;*/
 }
 a:visited {
-    color: #B22222;
+    /*color: #B22222;*/
+    color: #9ecae1;
 }
 a.ss-icon {
 	font-size: 20px;
@@ -154,7 +156,8 @@ a.ss-icon {
 	color: #ccc;
 }
 a:hover {
-    color: #EE0000;
+    color: #3182bd;
+    /*color: #EE0000;*/
 }
 em {
     font-style: italic;
@@ -187,7 +190,8 @@ dl .meta {
     margin-top: 14px;
 }
 
-.listing-item,.listing-seperator{list-style-type:none;}
+.listing-item,.listing-seperator{list-style-type:none;
+color: #08519c}
 .listing-item a{
     padding:.2em 1em;
 
@@ -209,16 +213,19 @@ display: block;
 padding: 0 4px;
 margin: 2px;
 text-decoration: none;
+color: #3182bd
 }
 
 .paginator .current-page {
 color: white;
-background: #ff0000;
+/*background: #ff0000;*/
+background: #08519c;
 }
 
 .paginator a:hover{
 color: white;
-background: #83BF73;
+/*background: #83BF73;*/
+background: #9ecae1;
 }
 
 
