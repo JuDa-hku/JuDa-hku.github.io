@@ -34,24 +34,17 @@ Python modules are one of the main abstraction layers avavilable and the most na
 The **import modu** statement will look for the proper file which is *modu.py* in the same directory as the caller if it exists. If it is is not found, the Python will search for it in the "path". Once **modu.py** is found, the Python interpreter will execute the module in an isolated scope. Any top-level statement in **modu.py** will be executed, including other imports if any. Function and class definitions are stored in the module's dictionary.
 
 It is possible to use special syntax of the statement **from modu import ***. This is generally considered bad practice. **Using import * makes code harder to read and makes dependencies less clear**. Using **from modu import func** is a way to pinpoint the function you want to import and put it in the global namespace.
-{% highlight objc %}
-	[...]
+{% highlight python %}
 	from modu import *
-	[...]
 	x=sqrt(4) #is sqrt part of modu? A builtin? Defined above?
 	#This is bad
 
-	[...]
 	from modu import sqrt
-	[...]
 	x=sqrt(4) #sqrt may part of modu if not redefined.
-	#This is better
 
-	[...]
 	import modu
-	[...]
 	x=modu.sqrt(4) #sqrt is visibly part of modu's namespace
-{% endhighlight objc %}
+{% endhighlight python %}
 
 ##Packages
 Any directory with an **__init__.py** file is considered a Python package. The different modules in the package are imported in a similar manner as plain modules, but with a special behavior for **__init__.py** file, which is used to gather all package-wide definitions.
@@ -74,7 +67,7 @@ Another way to say the same thing is to suggest using functions and procedures w
 
 ##Decorators
 The Python language provides a simple yet powerful syntax called ‘decorators’. A decorator is a function or a class that wraps (or decorates) a function or a method. The ‘decorated’ function or method will replace the original ‘undecorated’ function or method. Because functions are first-class objects in Python, it can be done ‘manually’, but using the @decorator syntax is clearer and thus preferred.
-{% highlight objc %}
+{% highlight python %}
 def foo():
     # do something
 def decorator(func):
@@ -86,16 +79,16 @@ foo = decorator(foo)  # Manually decorate
 def bar():
     # Do something
 # bar() is decorated
-{% endhighlight objc %}
+{% endhighlight python %}
 
 ## Dynamic typing
 The dynamic typing of Python is often considered to be a weakness.
-{% highlight objc %}
+{% highlight python %}
 a=1
 a="abc"
 items='a b c'
 items=items.split(' ')
-{% endhighlight objc %}
+{% endhighlight python %}
 No efficiency gain when reusing names: Python will still create new objects.
 
 ## Mutable and immutable types
@@ -106,7 +99,7 @@ The most important part here is *mutable* object can not be used as dictionary k
 	print my_list
 
 Using mutable types that are mutable in nature and immutable types for things fixed in nature. Attention: strings are immutable, it will be inefficient to get a new string from the original one.
-{% highlight objc %}
+{% highlight python %}
 	nums=" "
 	for n in range(20):
 		nums+=str(n)
@@ -120,4 +113,4 @@ Using mutable types that are mutable in nature and immutable types for things fi
 	nums=[str(n) for n in range(20)]
 	print "".join(nums) #best
 
-{% endhighlight objc %}
+{% endhighlight python %}

@@ -13,7 +13,7 @@ tags:
 
 ## SVM Example
 SVM is a very useful tool for large dataset, its training process is quite fast. KKT condition is important when deducing the algorithm.
-{% highlight objc %}
+{% highlight python %}
 import numpy as np
 import pylab as pl
 from sklearn import datasets
@@ -52,5 +52,5 @@ for i, clf in enumerate((svc, rbf_svc, poly_svc, lin_svc)):
     pl.title(titles[i])
 
 pl.savefig('svm_iris.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![svm_iris.png](/png/svm_iris.png)

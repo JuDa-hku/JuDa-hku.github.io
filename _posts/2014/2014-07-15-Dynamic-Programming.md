@@ -15,7 +15,7 @@ tags:
 
 ## Fib Problem
 According to the definition of fib, we can write these code to calculate fib(n), but in fact, when using the code, we may find it cannot even calculate fib(40).
-{% highlight objc %}
+{% highlight python %}
 def fib(n):
     #print "Call fib(", n, ")"
     global nCall
@@ -31,7 +31,7 @@ print nCall
 
 We find that we call same fib(n) serveral times. To accelate the program, we use the dynamic programming (dynamic here due to historical reasons) skill. We sacrifice space to store result and then return these result directly in the code.
 
-{% highlight objc %}
+{% highlight python %}
 def fastFib(n, m):
     #print "Call fib(", n, ")"
     global nCall
@@ -49,9 +49,9 @@ def Fib(n):
 nCall = 0
 print Fib(100)
 print nCall
-{% endhighlight objc %}
+{% endhighlight python %}
 In python, I use dict type m to store the result and by using c or c++, we may use array m and  initialize the m to be a zero vector which can never be the fib result.
-{% highlight objc %}
+{% highlight python %}
 def fastFib(n, m):
     #print "Call fib(", n, ")"
     global nCall
@@ -71,11 +71,11 @@ def Fib1(n):
 nCall = 0
 print Fib1(10)
 print nCall
-{% endhighlight objc %}
+{% endhighlight python %}
 
 ## Knapsack Problem
 The method that store result and use it directly can be used in the classic Knapsack problem. Image this, you are a burglar and want to stole things but you can only bring 9 pounds and there are 4 ponds gold, a china which is 5 ponds and  a valuable painting in front of you. Burglar need to make a choice to maximize the value that he stole. If we bruteforce the question, it has exponential complexity. we can transform it to be a pesudo poly complexity problem by using dynamic programming.
-{% highlight objc %}
+{% highlight python %}
 w = [3, 3, 3, 5,2, 6, 7, 1, 4]
 v = [4, 4, 4, 10,2, 12, 8,3, 7]
 maxW = 17
@@ -100,10 +100,10 @@ def bruteForce(w, v, maxW, i):
 nCall = 0
 print bruteForce(w, v, maxW, len(w)-1)
 print nCall
-{% endhighlight objc %}
+{% endhighlight python %}
 We donot store any intermediate result.
 
-{% highlight objc %}
+{% highlight python %}
 def clever(w, v, maxW, i, m):
     global nCall
     nCall += 1
@@ -146,5 +146,5 @@ while res > 0:
         res -= v[i]
         print res
     i -= 1
-{%endhighlight objc %}
+{%endhighlight python %}
 To find the path to the maximize, we need to consider the m. First m[(27, 8)] do not equal to m[(27, 7)] **consider the meaning of dict m**. This means that we should include the 8+1 th item in the package. Second m[(27-4, 7)] does not equal to m[(27-4, 6)] which means that the 7+1th item should also be included, until the whole value, which is the value of res in the problem, equal to zero.

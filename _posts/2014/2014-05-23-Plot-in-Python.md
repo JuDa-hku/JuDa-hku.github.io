@@ -27,7 +27,7 @@ tags:
 There are a lot of plot in matplotlib gallary [http://matplotlib.org/gallery.html](http://matplotlib.org/gallery.html).
 The most important part is to tell the connections between classes, for example class axes, class axis, class fig.
 [Tutorial](http://www.loria.fr/~rougier/teaching/matplotlib/#contour-plots) Notes on some common used function in matplotlib. 
-{% highlight objc %}
+{% highlight python %}
 from matplotlib import pyplot as plt
 ##same as import pylab as plt
 plt.scatter(x_array, y_array, c='set color here, b, r...',
@@ -44,9 +44,9 @@ plt.fill_between([x0, x1], [y0, y1], [y2, y3], color=(1, 0, 0))
 ##the area on x is from x0 to x1
 ##y axis the first line from y0 to y2
 ## second line from y1 to y3
-{% endhighlight objc %}
+{% endhighlight python %}
 A example to use different colors to show different area.
-{% highlight objc %}
+{% highlight python %}
 import numpy as np
 from matplotlib import colors
 # colors can set different color for each label
@@ -85,7 +85,7 @@ Well formatted ticks are important. Tick locators control the positions of the t
 
 
 ## plot and fill_between
-{% highlight objc %}
+{% highlight python %}
 import numpy as np
 import pylab as pl
 n = 256
@@ -104,11 +104,11 @@ pl.xticks([])
 pl.ylim(-2.5,2.5)
 pl.yticks([])
 pl.savefig('fill_between.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![Fill_area](/png/fill_between.png?raw=true)
 
 ## scatter and color vector
-{% highlight objc %}
+{% highlight python %}
 import numpy as np
 import pylab as pl
 n = 1024
@@ -130,7 +130,7 @@ pl.savefig('scatter.png')
 ![scatter](/png/scatter.png?raw=true)
 
 ## bar plot and add text
-{% highlight objc %}
+{% highlight python %}
 import numpy as np
 import pylab as pl
 n = 12
@@ -152,12 +152,12 @@ pl.xticks([])
 pl.ylim(-1.25,+1.25)
 pl.yticks([])
 pl.savefig('bar_plot_with_text.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![bar](/png/bar_plot_with_text.png?raw=true)
 
 ## contour and savefig
 Refer [here](http://matplotlib.org/examples/color/colormaps_reference.html) for more color_maps.
-{%highlight objc%}
+{%highlight python%}
 import pylab as pl
 import numpy as np
 
@@ -173,11 +173,11 @@ pl.contourf(X, Y, f(X,Y), 8, alpha=.75, cmap=pl.cm.hot)
 pl.C = pl.contour(X, Y, f(X,Y), 8, colors='black', linewidth=.5)
 pl.clabel(pl.C, fontsize=10, inline=1)
 pl.savefig('contour.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![contour](/png/contour.png?raw=true)
 
 ## imshow with colorbar()
-{% highlight objc %}
+{% highlight python %}
 import pylab as pl
 def f(x,y):
     return (1-x/2+x**5+y**3)*np.exp(-x**2-y**2)
@@ -192,11 +192,11 @@ pl.imshow(f(X,Y), cmap='bone', interpolation='nearest', origin='lower')
 ##interpolation has many choice and will show in ps, or pdf.
 pl.colorbar()
 pl.savefig('imshow.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![imshow](/png/imshow.png?raw=true)
 
 ## pie
-{% highlight objc %}
+{% highlight python %}
 from matplotlib import pyplot as pl
 import numpy as np
 n = 3
@@ -215,14 +215,14 @@ pl.pie(Z,colors=colors, explode=[0,0,0.2], labels=('man','woman','not known'), a
 # label add name
 pl.gca().set_aspect('equal')
 pl.save('pie.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 *gca()* return the current axes, creating one if necessary.
 By *set_aspect('equal')* figure and axes are euqal, the pie chart look best .
 **axes(aspect=1)** is the easiest way.
 ![pie](/png/pie.png?raw=true)
 
 ##grid
-{% highlight objc %}
+{% highlight python %}
 import pylab as pl
 pl.figure(figsize=(6,4))
 ax = pl.axes([0.025, 0.025, 0.95, 0.95])
@@ -242,11 +242,11 @@ ax.grid(which='minor', axis='y', linewidth=0.25, linestyle='-', color='0.75')
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 pl.savefig('grid.png')
-{% endhighlight objc%}
+{% endhighlight python%}
 ![grid.png](/png/grid.png?raw=true)
 
 ## Multi plots
-{% highlight objc %}
+{% highlight python %}
 import pylab as pl
 fig = pl.figure(figsize=(6,4))
 fig.subplots_adjust(bottom=0.025, left=0.025, top=0.975, right=0.975)
@@ -264,11 +264,11 @@ pl.subplot(2,3,6)
 pl.xticks([])
 pl.yticks([])
 pl.savefig('Multi_plots.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![Multi_plots](/png/Multi_plots.png?raw=true)
 
 ## polar axis with subplots
-{% highlight objc %}
+{% highlight python %}
 import pylab as pl
 import numpy as np
 pl.figure(figsize=(6,4))
@@ -290,11 +290,11 @@ for r,bar in zip(radii, bars):
     bar.set_facecolor(pl.cm.jet(r/10))
     bar.set_alpha(0.5)
 pl.savefig('ploar_axis.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![ploar_axis](/png/ploar_axis.png?raw=true)
 
 ## 3d plot
-{% highlight objc %}
+{% highlight python %}
 import pylab as pl
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
@@ -311,12 +311,12 @@ ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='hot')
 ax.contourf(X, Y, Z, zdir='z', offset=-2,cmap=cm.hot)
 ax.set_zlim(-2,2)
 pl.savefig('3dplot.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 ![3dplot](/png/3dplot.png?raw=true)
 
 ## matplotlib logo design
 The logo are composed by the background text, the bar plot and the text "matplotlib". Plot each part one by one. we need **transform = ax.tranAxes** ax.tranAxes is the coordinate system of the display.
-{% highlight objc %}
+{% highlight python %}
 # from Tony Yu  logo design for matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
@@ -375,7 +375,7 @@ if __name__ == '__main__':
     add_matplotlib_text(main_axes)
     print("main")
     plt.savefig("./matplot_log.png")
-{% endhighlight objc %}
+{% endhighlight python %}
 ![matplot_log](/png/matplot_log.png?raw=true)
 
 

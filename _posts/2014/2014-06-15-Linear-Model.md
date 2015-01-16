@@ -16,7 +16,7 @@ tags:
 
 ## Ridge Regression
 If there are few data per dimension, noise in the observations induces high variance, we use ridge regression to avoid this problem
-{% highlight objc %}
+{% highlight python %}
 import numpy as np
 import pylab as pl
 from sklearn import datasets
@@ -44,13 +44,13 @@ for _ in range(6):
     ax.scatter(this_X, y, s=5, c='r')
 ax.set_ylim([0,1])
 pl.savefig('ridge.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 The plot to compare regular linear regression and ridge regression
 
 ![ridge](/png/ridge.png)
 
 ## Logistic Regression Iris data
-{% highlight objc %}
+{% highlight python %}
 logistic = linear_model.LogisticRegression(C=1e5)
 logistic.fit(iris_X_train, iris_y_train)
 
@@ -64,11 +64,11 @@ Z = logistic.predict(np.c_[xx.ravel(), yy.ravel()])
 Z = Z.reshape(xx.shape)
 pl.figure(figsize=(6,4))
 pl.pcolormesh(xx, yy, Z, cmap=cmap_data)
-{% endhighlight objc %}
+{% endhighlight python %}
 ![logistic regression](/png/logistic.png)
 
 ## KNN and Logistics to Digit data
-{% highlight objc %}
+{% highlight python %}
 from sklearn import metrics
 #to use metrics.confusion_matrix to get the table
 digits = datasets.load_digits()
@@ -93,7 +93,7 @@ clf = linear_model.LogisticRegression()
 clf.fit(digits_X_train, digits_y_train)
 print(metrics.confusion_matrix(clf.predict(digits_X_test),
                           digits_y_test))
-{% endhighlight objc %}
+{% endhighlight python %}
 
 
 

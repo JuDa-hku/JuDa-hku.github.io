@@ -14,7 +14,7 @@ tags:
 
 ## Kaggle digit 101
 !['Averaging image'](/png/meanDigit.png)
-{% highlight objc %}
+{% highlight python %}
 number = np.arange(0,10)
 results = np.matrix(np.zeros(10*28*28)).reshape((10, 28*28))
 for i in number:
@@ -30,5 +30,5 @@ for i in number:
     pl.yticks([])
     pl.imshow(a, cmap=cm.Greys)
 pl.savefig('meanDigit.png')
-{% endhighlight objc %}
+{% endhighlight python %}
 

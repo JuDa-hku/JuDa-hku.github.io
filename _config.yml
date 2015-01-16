@@ -1,6 +1,13 @@
-markdown: kramdown
+#markdown_ext: foo
+markdown: kramdown 
+#markdown: redcarpet
 permalink: /:year/:month/:title/
 url: http://juda-hku.github.io
-author: 鞠达
-highlighter: true
-paginate: 24
+author: JU 
+#highlighter: true
+#highlighter: pygments
+#pygments: true
+paginate: 18
+fenced_code_blocks: true
+kramdown:
+  default_lang: python

@@ -29,6 +29,7 @@ In this case, we need to show the rainfall for each province and I choose color 
 Use *fill* function provided in the matplotlib, and choose colormap from brewer2mpl. We can fill the area and choose the color according to some number by using Normalize function in mpl.colors.
 
 
+
 ## Bayesian and Frequentist
 - Bayesian: Assume the parameters that we are interested in have some kinds of distribution. We use $$\pi(\theta \vert y)$$ to denote the posterior distribution. If we consider the posterior distribution, it is not hard to find the connection between the distribution and likelihood function. If we consider interval estimation, we can find the interval, e.g. $$P(\theta \in (-2,5) \vert y)=0.95$$, because we can calculate the posterior distribution for the parameter. Common prior distribution to choose is conjugate priors to simplify our calculation. But due to the fast computers we have, we use MCMC to simulate the procedure.
 

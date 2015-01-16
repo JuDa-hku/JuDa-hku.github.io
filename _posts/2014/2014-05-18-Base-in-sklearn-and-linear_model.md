@@ -19,7 +19,7 @@ tags:
 
 ## Python tips
 Values may be modified in the function. For mutable value, it can be changed in the function, for inmutable variable, it will not be changed in the function
-{%highlight objc %}
+{%highlight python %}
 def try_change(a,b,c):
 	a=10
 	b.append(42)
@@ -30,22 +30,22 @@ y=[10]
 z=[11]
 try_change(x,y,z)
 print(x,y,z)
-{% endhighlight objc%}
+{% endhighlight python%}
 
 A class method receives the class as implicit first argument, just like an instance method receives the instance. To declare a class method, use this idiom:
-{% highlight objc %}
+{% highlight python %}
 class C(object):
 	@classmethod
 	def f(cls,arg1,arg2,...):
 		...
-{% endhighlight objc %}
+{% endhighlight python %}
 A static method does not receive an implicit first argument.To declare a static method
-{% highlight objc %}
+{% highlight python %}
 class C(object):
 	@staticmethod
 	def f(arg1,arg2,...):
 		...
-{% endhighlight objc %}
+{% endhighlight python %}
 
 
 *hasattr(object, name)* The arguments are an object and a string. The result is True if the string is the name of one of the object’s attributes, False if not.
@@ -63,7 +63,7 @@ class C(object):
 [Inspect](https://docs.python.org/2/library/inspect.html) modulex provides several useful functions to help get information about live objects such as modules, classes, methods, functions, tracebacks, frame objects, and code objects. *inspect.getargspec(func)* Get the names and default values of a Python function’s arguments.
 
 [\*\*kwargs](https://docs.python.org/2/tutorial/controlflow.html#keyword-arguments) You can use *\*\*kwargs* to let your functions to take an arbitrary number of keyword argument and use *args to receives a tuple containing the positional argument.
-{% highlight objc %}
+{% highlight python %}
 def print_keyword_args(*args,**kwargs):
 	for arg in args:
 		print arg
@@ -71,19 +71,19 @@ def print_keyword_args(*args,**kwargs):
 	for kw in keys:
 		print kw,":",kwargs[kw]
 print_keyword_args("it is","me",you="happy",me="happy")
-{% endhighlight objc %}
+{% endhighlight python %}
 
 [Staticmethod(function)](https://docs.python.org/2/library/functions.html#staticmethod) return a static method for function.A static method does not receive an implicit first argument. To declare a static method, use this idiom:
- {%highlight objc %}
+ {%highlight python %}
     class C(object):
         @staticmethod
         def f(arg1, arg2, ...):
             ...
-{% endhighlight objc %}
+{% endhighlight python %}
 It can be called either on the class (such as C.f()) or on an instance (such as C().f()). The instance is ignored except for its class.
 
 [Classmethod(function)](https://docs.python.org/2/library/functions.html#classmethod) return a class method for function. A class method receives the class as implicit first argument, just like an instance method receives the instance. To declare a class method, use this idiom:
-{% highlight objc%}
+{% highlight python%}
     class C(object):
         @classmethod
         def f(cls, arg1, arg2, ...):
@@ -106,20 +106,20 @@ With_metaclass() is a utility class factory function provided by the six library
     class MyClass(with_metaclass(Meta, Base)):
         pass
 This is needed because the syntax to attach a metaclass changed between Python 2 and 3:
-{%highlight objc %}
+{%highlight python %}
 Python 2:
 class MyClass(object):
     __metaclass__ = Meta
 Python 3:
 class MyClass(metaclass=Meta):
     pass
-{% endhighlight objc %}
+{% endhighlight python %}
 The with_metaclass() function makes use of the fact that metaclasses are a) inherited by subclasses, and b) a metaclass can be used to generate new classes; it effectively creates a new base class by using the metaclass as a factory to generate an empty class:
 
 numpy.exp(prob,prob) is different with prob=numpy.exp(prob).
 
 Function name can also be regarded as variable in functions.
-{% highlight objc %}
+{% highlight python %}
 def func(a=repr):
 b=a(123)
 print b
@@ -127,27 +127,27 @@ func()
 def func1(x):
 return x+1
 func(func1)
-{% endhighlight objc %}
+{% endhighlight python %}
 
 why we need .copy()? Assignment statements in Python do not copy objects, they create bindings between a target and an object. For collections that are mutable or contain mutable items, a copy is needed so one can change one copy without changing the other.
 
 collections provides high performance containers. [from collections import defaultdict](https://docs.python.org/2/library/collections.html?highlight=defaultdict#collections.defaultdict), *defaultdict* object is a new dictionary-like object.
-{% highlight objc %}
+{% highlight python %}
  s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
  d = defaultdict(list)
  for k, v in s:
      d[k].append(v)
  d.items()
 [('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
-{% endhighlight objc %}
+{% endhighlight python %}
 Setting the default_factory to int makes the defaultdict useful for counting.
-{% highlight objc %}
+{% highlight python %}
 s='mississippi'
 d=default(int)
 for k in s:
 	d[k]+=1
 d.items()	
-{% endhighlight objc %}
+{% endhighlight python %}
 
 Why run the code **import os**, **print os.path.realpath(__file__)** directly does not work?
 
