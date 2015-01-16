@@ -31,6 +31,7 @@
 
   $.fn.tagcloud.defaults = {
     size: {start: 14, end: 18, unit: "pt"}
+    color: #08519C
   };
 
   // Converts hex to an RGB array

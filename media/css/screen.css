@@ -146,6 +146,9 @@ a {
     color: #3182bd;
     /*color: #EE0000;*/
 }
+a:link{
+    color: #08519C
+}
 a:visited {
     /*color: #B22222;*/
     color: #9ecae1;
