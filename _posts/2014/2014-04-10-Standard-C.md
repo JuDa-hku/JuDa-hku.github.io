@@ -18,6 +18,7 @@ Basically, the book [**The Standard C Library**](http://www.amazon.com/The-Stand
 
 ## MakeFile
 If we want to compile lots of files at the same time. To link them one by one is not a good idea, especially when we update some of them and the relationship between is complex. To write a **makefile** for the whole project is a good idea. A simple makefile is given below.
+
 {% highlight objc %}
 objects=dependence0 dependence1
 result:  ${objects}
@@ -48,6 +49,7 @@ Programmers can eliminate the assertions just by recompiling the program, withou
 	#deinfe assert(ignore) ((void) 0)
 
 The test code is easy to write, for the file in the book, I write a makefile for it.
+
 {% highlight objc %}
 objects=tassert.o xassert.o
 tassert:  ${objects}

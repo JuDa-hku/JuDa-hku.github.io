@@ -15,6 +15,7 @@ tags:
 
 ## Fib Problem
 According to the definition of fib, we can write these code to calculate fib(n), but in fact, when using the code, we may find it cannot even calculate fib(40).
+
 {% highlight python %}
 def fib(n):
     #print "Call fib(", n, ")"
@@ -27,7 +28,7 @@ def fib(n):
 nCall = 0
 print fib(20)
 print nCall
-{% endhighlight objc %}
+{% endhighlight python %}
 
 We find that we call same fib(n) serveral times. To accelate the program, we use the dynamic programming (dynamic here due to historical reasons) skill. We sacrifice space to store result and then return these result directly in the code.
 
@@ -51,6 +52,7 @@ print Fib(100)
 print nCall
 {% endhighlight python %}
 In python, I use dict type m to store the result and by using c or c++, we may use array m and  initialize the m to be a zero vector which can never be the fib result.
+
 {% highlight python %}
 def fastFib(n, m):
     #print "Call fib(", n, ")"
@@ -75,6 +77,7 @@ print nCall
 
 ## Knapsack Problem
 The method that store result and use it directly can be used in the classic Knapsack problem. Image this, you are a burglar and want to stole things but you can only bring 9 pounds and there are 4 ponds gold, a china which is 5 ponds and  a valuable painting in front of you. Burglar need to make a choice to maximize the value that he stole. If we bruteforce the question, it has exponential complexity. we can transform it to be a pesudo poly complexity problem by using dynamic programming.
+
 {% highlight python %}
 w = [3, 3, 3, 5,2, 6, 7, 1, 4]
 v = [4, 4, 4, 10,2, 12, 8,3, 7]
@@ -101,6 +104,7 @@ nCall = 0
 print bruteForce(w, v, maxW, len(w)-1)
 print nCall
 {% endhighlight python %}
+
 We donot store any intermediate result.
 
 {% highlight python %}
