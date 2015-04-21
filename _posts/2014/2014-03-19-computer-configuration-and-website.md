@@ -25,6 +25,11 @@ In mac, the path is not easy to set
 (when window-system (cd "~/Desktop/"))
 {%endhighlight objc %}
 
+If your environment variables are being set in ~/.bash_profile, Create a file called ~/.emacs_bash and put in it the following:
+. ~/.bash_profile
+Don't forget the newline at the end of that line or it won't be executed.
+~/.emacs_bash is loaded by emacs when you run bash from within it, such as when using M-x shell or shell-command so you can use it to set any environment variables you want available.
+
 To install package, we can choose the **macport** package system to simplify our installation. [the flyspell script](http://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell.html) can be used to check word spelling when typing. And set different kinds of checking method below.
 
 {%highlight objc %}

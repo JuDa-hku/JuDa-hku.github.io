@@ -5,6 +5,7 @@ change `_includes / comments.md`  disqus_shortname，and  `_layouts / default.ht
 
 Add mathjax to write math formula.
 
+Need to use gem install typogruby and jekyll. 
 Add new feature to use pygments with karmdown to highlight code.
 
 Thanks the amazing website github!
